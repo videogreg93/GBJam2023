@@ -10,11 +10,13 @@ import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
 import gaia.ui.utils.addForeverAction
 
-class MainScreen: BasicScreen("Main") {
+class MainScreen : BasicScreen("Main") {
+
+    var selectedPalette = Shaders.palette1
 
     override fun firstShown() {
         super.firstShown()
-        val head = BaseActor(Texture("head.png")).apply {
+        val head = BaseActor(Texture("paletteTest.png")).apply {
             center()
             addAction(
                 Actions.forever(
@@ -29,6 +31,11 @@ class MainScreen: BasicScreen("Main") {
         crew.addMembers(head)
     }
 
+    override fun render(delta: Float) {
+        super.render(delta)
+        batch.shader = selectedPalette
+    }
+
     override fun onAction(action: ActionListener.InputAction): Boolean {
         println(action)
         when (action) {
@@ -36,6 +43,21 @@ class MainScreen: BasicScreen("Main") {
             ActionListener.InputAction.TWO -> updateResolution(2)
             ActionListener.InputAction.THREE -> updateResolution(4)
             ActionListener.InputAction.FOUR -> updateResolution(8)
+            ActionListener.InputAction.SEVEN -> {
+                selectedPalette = Shaders.palette1
+                Globals.currentBackgroundColor = Globals.palette1BackghroundColor
+            }
+
+            ActionListener.InputAction.EIGHT -> {
+                selectedPalette = Shaders.palette2
+                Globals.currentBackgroundColor = Globals.palette2BackghroundColor
+            }
+
+            ActionListener.InputAction.NINE -> {
+                selectedPalette = Shaders.palette3
+                Globals.currentBackgroundColor = Globals.palette3BackghroundColor
+            }
+
             else -> return false
         }
         return true

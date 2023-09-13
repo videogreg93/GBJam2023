@@ -128,7 +128,9 @@ class MainApplication() : KtxGame<BasicScreen>(),
     // TODO should we stop render/act when fading?
     override fun render() {
         val deltaTime = if (modals.lastOrNull()?.pauseMainScreen == true) 0f else Gdx.graphics.deltaTime
-        clearScreen(0.878f, 0.973f, 0.816f, 1f)
+        val bgColor = Globals.currentBackgroundColor
+        clearScreen(bgColor.r, bgColor.g, bgColor.b, 1f)
+//        clearScreen(0.878f, 0.973f, 0.816f, 1f)
         currentScreen.render(deltaTime)
         handleModal()
 //        MegaManagers.devTools?.render()

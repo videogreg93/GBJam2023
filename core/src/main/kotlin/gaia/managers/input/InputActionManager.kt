@@ -190,6 +190,10 @@ class InputActionManager : KtxInputAdapter {
         put(Input.Keys.NUM_2, ActionListener.InputAction.TWO)
         put(Input.Keys.NUM_3, ActionListener.InputAction.THREE)
         put(Input.Keys.NUM_4, ActionListener.InputAction.FOUR)
+        put(Input.Keys.NUM_7, ActionListener.InputAction.SEVEN)
+        put(Input.Keys.NUM_8, ActionListener.InputAction.EIGHT)
+        put(Input.Keys.NUM_9, ActionListener.InputAction.NINE)
+        put(Input.Keys.NUM_0, ActionListener.InputAction.ZERO)
     }
 
     val inputMappings: HashMap<Int, ActionListener.InputAction>
@@ -251,7 +255,7 @@ interface ActionListener {
     }
 
     enum class InputAction {
-        UP, DOWN, LEFT, RIGHT, ONE, TWO, THREE, FOUR, CLICK, RIGHT_CLICK
+        UP, DOWN, LEFT, RIGHT, ONE, TWO, THREE, FOUR, SEVEN, EIGHT, NINE, ZERO, CLICK, RIGHT_CLICK
     }
 }
 

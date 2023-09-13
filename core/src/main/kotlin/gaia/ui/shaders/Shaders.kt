@@ -37,10 +37,23 @@ object Shaders {
             "}"
     val whiteShader: ShaderProgram
         get() = ShaderProgram(whiteVertexShader, whiteFragmentShader)
-    val redShader: ShaderProgram
+    // https://lospec.com/palette-list/nintendo-gameboy-bgb
+    val palette1: ShaderProgram
         get() = ShaderProgram(
             Gdx.files.internal("shaders/passthrough.vert"),
-            Gdx.files.internal("shaders/red.frag"),
+            Gdx.files.internal("shaders/palette1.frag"),
+        )
+    // https://lospec.com/palette-list/modern-4
+    val palette2: ShaderProgram
+        get() = ShaderProgram(
+            Gdx.files.internal("shaders/passthrough.vert"),
+            Gdx.files.internal("shaders/palette2.frag"),
+        )
+    // https://lospec.com/palette-list/cosmic-cream-gb
+    val palette3: ShaderProgram
+        get() = ShaderProgram(
+            Gdx.files.internal("shaders/passthrough.vert"),
+            Gdx.files.internal("shaders/palette3.frag"),
         )
     val transitionShader: ShaderProgram
         get() = ShaderProgram(
@@ -56,10 +69,13 @@ object Shaders {
     fun initShaders() {
         fadeInShaderVertex = Gdx.files.internal("shaders/passthrough.vert")
         fadeInShaderFragment = Gdx.files.internal("shaders/fadeIn.frag")
-        if (transitionShader.isCompiled) {
-            info { "Shaders compiled" }
-        } else {
-            ktx.log.error { transitionShader.log }
+        val allShaders = listOf(transitionShader, palette1, palette2, palette3)
+        allShaders.forEach {
+            if (it.isCompiled) {
+                info { "$it compiled" }
+            } else {
+                ktx.log.error { it.log }
+            }
         }
     }
 }
