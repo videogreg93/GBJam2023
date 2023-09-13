@@ -1,0 +1,91 @@
+buildscript {
+  repositories {
+    mavenCentral()
+    maven { url 'https://s01.oss.sonatype.org' }
+    mavenLocal()
+    google()
+    gradlePluginPortal()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    classpath "org.wisepersist:gwt-gradle-plugin:$gwtPluginVersion"
+
+  }
+}
+
+allprojects {
+  apply plugin: 'eclipse'
+  apply plugin: 'idea'
+}
+
+configure(subprojects) {
+  apply plugin: 'java-library'
+  apply plugin: 'kotlin'
+  sourceCompatibility = 11
+  compileJava {
+    options.incremental = true
+  }
+
+  kotlin {
+    jvmToolchain(11)
+  }
+}
+
+task nls() {
+  def project = './'             // Will contain generated enum class.
+  def source = 'core/src/main/kotlin'   // Kotlin source path of the project.
+  def pack = 'com.odencave.i18n'    // Enum target package.
+  def name = 'Nls'                 // Enum class name.
+  def fileName = 'nls.kt'          // Name of Kotlin file containing the enum.
+  def bundle = './assets/i18n/nls.properties' // Path to i18n bundle file.
+
+  println("Processing i18n bundle file at ${bundle}...")
+  def builder = new StringBuilder()
+  builder.append("""package ${pack}
+import ktx.i18n.BundleLine
+/** Generated from ${bundle} file. */
+enum class ${name} : BundleLine {
+""")
+  def newLine = System.getProperty("line.separator")
+  file(bundle).eachLine {
+    def data = it.trim()
+    def separator = data.indexOf('=')
+    if (!data.isEmpty() && separator > 0 && !data.startsWith('#')) {
+      def id = data.substring(0, separator)
+      builder.append('    ').append("/** ${data.substring(separator+1)} **/").append(newLine).append('    ').append(id).append(',').append(newLine)
+    }
+  }
+  // If you want a custom enum body, replace the following append:
+  builder.append('    ;').append(newLine).append('}').append(newLine)
+
+  source = source.replace('/', File.separator)
+  pack = pack.replace('.', File.separator)
+  def path = project + File.separator + source + File.separator +
+    File.separator + fileName
+  println("Saving i18n bundle enum at ${path}...")
+  def enumFile = file(path)
+  delete enumFile
+  enumFile.getParentFile().mkdirs()
+  enumFile.createNewFile()
+  enumFile << builder << newLine
+  println("Done. I18n bundle enum generated.")
+}
+
+subprojects {
+  version = '1.0.0'
+  ext.appName = 'GbaJam'
+  repositories {
+    mavenCentral()
+    maven { url 'https://s01.oss.sonatype.org' }
+    // You may want to remove the following line if you have errors downloading dependencies.
+    mavenLocal()
+    gradlePluginPortal()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://jitpack.io' }
+  }
+}
+
+eclipse.project.name = 'GbaJam' + '-parent'
