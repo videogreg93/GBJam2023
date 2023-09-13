@@ -4,18 +4,25 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.i18n.gaia.ui.shaders.Shaders
+import com.odencave.i18n.models.Palette
 import gaia.Globals
 import gaia.base.BaseActor
 import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
-import gaia.ui.utils.addForeverAction
+import gaia.utils.wrappingCursor
 
 class MainScreen : BasicScreen("Main") {
 
-    var selectedPalette = Shaders.palette1
+    private var selectedPaletteIndex: Int = 0
+        set(value) {
+            field = Palette.allPalettes.wrappingCursor(value)
+        }
+    private val selectedPalette: Palette
+        get() = Palette.allPalettes[selectedPaletteIndex]
 
     override fun firstShown() {
         super.firstShown()
+        batch.shader = Shaders.paletteShader
         val head = BaseActor(Texture("paletteTest.png")).apply {
             center()
             addAction(
@@ -33,7 +40,10 @@ class MainScreen : BasicScreen("Main") {
 
     override fun render(delta: Float) {
         super.render(delta)
-        batch.shader = selectedPalette
+        batch.shader.setUniformf("inputColor1", selectedPalette.color1)
+        batch.shader.setUniformf("inputColor2", selectedPalette.color2)
+        batch.shader.setUniformf("inputColor3", selectedPalette.color3)
+        batch.shader.setUniformf("inputColor4", selectedPalette.color4)
     }
 
     override fun onAction(action: ActionListener.InputAction): Boolean {
@@ -43,19 +53,9 @@ class MainScreen : BasicScreen("Main") {
             ActionListener.InputAction.TWO -> updateResolution(2)
             ActionListener.InputAction.THREE -> updateResolution(4)
             ActionListener.InputAction.FOUR -> updateResolution(8)
-            ActionListener.InputAction.SEVEN -> {
-                selectedPalette = Shaders.palette1
-                Globals.currentBackgroundColor = Globals.palette1BackghroundColor
-            }
-
-            ActionListener.InputAction.EIGHT -> {
-                selectedPalette = Shaders.palette2
-                Globals.currentBackgroundColor = Globals.palette2BackghroundColor
-            }
-
-            ActionListener.InputAction.NINE -> {
-                selectedPalette = Shaders.palette3
-                Globals.currentBackgroundColor = Globals.palette3BackghroundColor
+            ActionListener.InputAction.ZERO -> {
+                selectedPaletteIndex++
+                Globals.currentBackgroundColor = selectedPalette.color4
             }
 
             else -> return false

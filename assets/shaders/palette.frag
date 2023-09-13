@@ -9,6 +9,11 @@ varying vec2 v_texCoords;
 uniform sampler2D u_texture;
 uniform float grayscale;
 
+uniform vec3 inputColor1;
+uniform vec3 inputColor2;
+uniform vec3 inputColor3;
+uniform vec3 inputColor4;
+
 void main()
 {
     vec4 texColor = texture2D(u_texture, v_texCoords);
@@ -20,10 +25,10 @@ void main()
     vec4 color4 = vec4(0.875, 0.875, 0.875, 1);
 
     // Palette colors, from dark to lighter
-    vec4 paletteColor1 = vec4(0.031, 0.094, 0.125, 1);
-    vec4 paletteColor2 = vec4(0.204, 0.408, 0.337, 1);
-    vec4 paletteColor3 = vec4(0.533, 0.753, 0.439, 1);
-    vec4 paletteColor4 = vec4(0.878, 0.973, 0.816, 1);
+    vec4 paletteColor1 = vec4(inputColor1.x, inputColor1.y, inputColor1.z, 1);
+    vec4 paletteColor2 = vec4(inputColor2.x, inputColor2.y, inputColor2.z, 1);
+    vec4 paletteColor3 = vec4(inputColor3.x, inputColor3.y, inputColor3.z, 1);
+    vec4 paletteColor4 = vec4(inputColor4.x, inputColor4.y, inputColor4.z, 1);
 
 
 
