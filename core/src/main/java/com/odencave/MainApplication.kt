@@ -1,20 +1,16 @@
 package com.gregory
 
-import com.badlogic.gdx.Application
-import com.badlogic.gdx.Application.LOG_DEBUG
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.badlogic.gdx.utils.Align.center
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.odencave.i18n.screens.MainScreen
 import gaia.Globals
@@ -24,7 +20,6 @@ import gaia.base.Crew
 import gaia.managers.MegaManagers
 import gaia.managers.ModalManager
 import gaia.managers.ScreenManager
-import gaia.managers.context.MainContext
 import gaia.ui.BasicScreen
 import gaia.ui.Letterbox
 import gaia.ui.Modal
@@ -133,7 +128,7 @@ class MainApplication() : KtxGame<BasicScreen>(),
     // TODO should we stop render/act when fading?
     override fun render() {
         val deltaTime = if (modals.lastOrNull()?.pauseMainScreen == true) 0f else Gdx.graphics.deltaTime
-        clearScreen(0f, 0f, 0f, 1f)
+        clearScreen(0.878f, 0.973f, 0.816f, 1f)
         currentScreen.render(deltaTime)
         handleModal()
 //        MegaManagers.devTools?.render()

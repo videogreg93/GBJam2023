@@ -3,6 +3,7 @@ package com.odencave.i18n.screens
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.odencave.i18n.gaia.ui.shaders.Shaders
 import gaia.Globals
 import gaia.base.BaseActor
 import gaia.managers.input.ActionListener
@@ -13,12 +14,6 @@ class MainScreen: BasicScreen("Main") {
 
     override fun firstShown() {
         super.firstShown()
-        val background = BaseActor(Texture("border2.png")).apply {
-            center()
-        }
-        val test = BaseActor(Texture("border.png")).apply {
-            center()
-        }
         val head = BaseActor(Texture("head.png")).apply {
             center()
             addAction(
@@ -31,7 +26,7 @@ class MainScreen: BasicScreen("Main") {
                 )
             )
         }
-        crew.addMembers(background,test, head)
+        crew.addMembers(head)
     }
 
     override fun onAction(action: ActionListener.InputAction): Boolean {

@@ -1,5 +1,6 @@
 package gaia.managers
 
+import com.odencave.i18n.gaia.ui.shaders.Shaders
 import gaia.managers.assets.AssetManager
 import gaia.managers.context.MainContext
 import gaia.managers.fonts.FontManager
@@ -29,7 +30,7 @@ object MegaManagers {
         fontManager.init()
         soundManager.init()
         textBoy.init()
-
+        Shaders.initShaders()
     }
 
     fun dispose() {
