@@ -19,11 +19,10 @@ class MainScreen : BasicScreen("Main") {
         }
     private val selectedPalette: Palette
         get() = Palette.allPalettes[selectedPaletteIndex]
-
     override fun firstShown() {
         super.firstShown()
         batch.shader = Shaders.paletteShader
-        val head = BaseActor(Texture("paletteTest.png")).apply {
+        val head = BaseActor(Texture("testPalette.png")).apply {
             center()
             addAction(
                 Actions.forever(
@@ -40,10 +39,11 @@ class MainScreen : BasicScreen("Main") {
 
     override fun render(delta: Float) {
         super.render(delta)
-        batch.shader.setUniformf("inputColor1", selectedPalette.color1)
-        batch.shader.setUniformf("inputColor2", selectedPalette.color2)
-        batch.shader.setUniformf("inputColor3", selectedPalette.color3)
-        batch.shader.setUniformf("inputColor4", selectedPalette.color4)
+        val colors = selectedPalette.colorsSortedByLightness()
+        batch.shader.setUniformf("inputColor1", colors[0])
+        batch.shader.setUniformf("inputColor2", colors[1])
+        batch.shader.setUniformf("inputColor3", colors[2])
+        batch.shader.setUniformf("inputColor4", colors[3])
     }
 
     override fun onAction(action: ActionListener.InputAction): Boolean {

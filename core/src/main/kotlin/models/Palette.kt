@@ -12,6 +12,18 @@ data class Palette(
     val color3: Vector3,
     val color4: Vector3,
 ) {
+
+    fun allColors() = listOf(color1, color2, color3, color4)
+
+    fun colorsSortedByLightness(): List<Vector3> {
+        return listOf(color1, color2, color3, color4).sortedBy {
+            val array: FloatArray = FloatArray(4)
+            Color(it.x, it.y, it.z, 1f).toHsv(array)[3]
+        }
+    }
+
+
+
     companion object {
         val palette1 = Palette(
             Vector3(0.031f, 0.094f, 0.125f),
