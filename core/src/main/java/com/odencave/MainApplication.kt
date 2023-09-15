@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.viewport.FitViewport
+import com.odencave.i18n.screens.LoadingScreen
 import com.odencave.i18n.screens.MainScreen
 import gaia.Globals
 import gaia.Globals.WORLD_HEIGHT
@@ -112,10 +113,8 @@ class MainApplication() : KtxGame<BasicScreen>(),
         KtxAsync.initiate()
         MegaManagers.screenManager.screenListener = this
         MegaManagers.modalManager.setModalListener(this)
-        addScreen(MainScreen())
-        setScreen<MainScreen>()
-//        addScreen(LoadingScreen())
-//        setScreen<LoadingScreen>()
+        addScreen(LoadingScreen())
+        setScreen<LoadingScreen>()
 //        console = MainContext.inject()
 //        console.setPositionPercent(30f, 30f)
         addAsInput()

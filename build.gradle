@@ -33,6 +33,83 @@ configure(subprojects) {
   }
 }
 
+task regenerateImages() {
+  def builder = new StringBuilder()
+  def newLine = System.getProperty("line.separator")
+  def project = './'
+  def assetsFolder = './assets'
+  def source = 'core/src/main/kotlin'
+  def pack = 'com.odencave.assets'
+  def fileName = 'Assets.kt'
+  builder.append("""package ${pack}
+
+/** Generated from the assets folder. */
+object Assets {
+
+""")
+  ext.capitalize = { String s ->
+    return s.substring(0, 1).toUpperCase() + s.substring(1)
+  }
+  ext.isImage = { String name ->
+    return name.contains('.png') || name.contains('.jpg') || name.contains('.jpeg')
+  }
+  ext.isSound = { String name ->
+    return name.contains('.mp3') || name.contains('.wav') || name.contains('.ogg')
+  }
+  ext.isFont = { String name ->
+    return name.contains('.ttf')
+  }
+  ext.isValidAsset = { String name ->
+    return isImage(name) || isSound(name) || isFont(name)
+  }
+  ext.cleanImage = { String name ->
+    def newName = name
+      .replace(".png", "")
+      .replace(".jpg", "")
+      .replace(".jpeg", "")
+      .replace(".mp3", "")
+      .replace(".wav", "")
+      .replace(".ttf", "")
+      .replace("-", "_")
+      .replace(".", "_")
+      .replace(" ", "_")
+      .replace(",", "_")
+    if (Character.isDigit(newName.charAt(0))) {
+      newName = "n$newName"
+    }
+    if (isSound(name)) {
+      newName = newName + "_sound"
+    }
+    return newName
+  }
+  ext.printFile = { File[] files ->
+    files.each {
+      if (it.file && isValidAsset(it.name)) {
+        def varName = cleanImage(it.name)
+        def varPath = it.canonicalPath.split("assets")[1].replace('\\', '/').substring(1)
+        builder.append(newLine).append("const val $varName = \"").append(varPath).append('"')
+      } else if (it.isDirectory()) {
+        builder.append("""
+    object ${cleanImage(capitalize(it.name))} {""")
+        printFile(it.listFiles())
+        builder.append("}")
+      }
+    }
+  }
+  printFile(file(assetsFolder).listFiles())
+  builder.append(newLine).append("}")
+  // Write to file
+  def path = project + File.separator + source + File.separator +
+    File.separator + fileName
+  println("Saving Assets at ${path}...")
+  def assetsFile = file(path)
+  delete assetsFile
+  assetsFile.getParentFile().mkdirs()
+  assetsFile.createNewFile()
+  assetsFile << builder << newLine
+  println("Done. Assets file generated.")
+}
+
 task nls() {
   def project = './'             // Will contain generated enum class.
   def source = 'core/src/main/kotlin'   // Kotlin source path of the project.

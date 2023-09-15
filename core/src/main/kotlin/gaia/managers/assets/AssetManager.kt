@@ -17,7 +17,8 @@ class AssetManager : MegaManagers.Manager {
         initialAssetTypesToLoad.forEach {
             loadAssets(it)
         }
-        loadInputIconAssets()
+        println("Not loading input assets")
+//        loadInputIconAssets()
     }
 
     fun update(): Boolean {
@@ -68,9 +69,7 @@ class AssetManager : MegaManagers.Manager {
         }
 
         val initialAssetTypesToLoad = listOf(
-            Asset.TYPE.MAIN_MENU,
-            Asset.TYPE.OPTIONS_MENU,
-            Asset.TYPE.MAP,
+            Asset.TYPE.GENERIC
         )
     }
 
@@ -79,12 +78,6 @@ class AssetManager : MegaManagers.Manager {
 @Target(AnnotationTarget.FIELD)
 annotation class Asset(val type: TYPE = TYPE.GENERIC) {
     enum class TYPE {
-        MAIN_MENU,
-        OPTIONS_MENU,
         GENERIC,
-        MAP,
-        BATTLE,
-        BATTLE_COMMON,
-        SHOP
     }
 }

@@ -20,7 +20,7 @@ object MainContext {
             bindSingleton(Random(Random.nextInt()))
             bindSingleton(
                 Reflections(
-                    "com.gregory",
+                    "com.odencave",
                     FieldAnnotationsScanner(),
                     TypeAnnotationsScanner(),
                     SubTypesScanner()
