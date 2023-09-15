@@ -1,6 +1,9 @@
 package com.odencave.i18n.screens
 
 import com.badlogic.gdx.Gdx
+import com.odencave.i18n.entities.enemy.Enemy
+import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
+import com.odencave.i18n.entities.enemy.spawner.SpawnConfiguration
 import com.odencave.i18n.entities.player.Player
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
@@ -35,8 +38,24 @@ class MainScreen : BasicScreen("Main") {
             center()
             alignLeft(10f)
         }
-        crew.addMembers(player)
+        val spawner = EnemySpawner().apply {
+            repeat(9) {
+                addEnemy(
+                    listOf(
+                        SpawnConfiguration(
+                            Enemy().apply {
+                                moveStraight()
+                            },
+                            it
+                        ),
+                    ),
+                    0.5f
+                )
+            }
+        }
+        crew.addMembers(player, spawner)
         backgroundCrew.addMember(BackgroundGrid())
+        spawner.start()
     }
 
     override fun render(delta: Float) {
@@ -54,18 +73,22 @@ class MainScreen : BasicScreen("Main") {
                 isUpPressed = true
                 player.moveUp()
             }
+
             ActionListener.InputAction.DOWN -> {
                 isDownPressed = true
                 player.moveDown()
             }
+
             ActionListener.InputAction.RIGHT -> {
                 isRightPressed = true
                 player.moveRight()
             }
+
             ActionListener.InputAction.LEFT -> {
                 isLeftPressed = true
                 player.moveLeft()
             }
+
             ActionListener.InputAction.ONE -> updateResolution(1)
             ActionListener.InputAction.TWO -> updateResolution(2)
             ActionListener.InputAction.THREE -> updateResolution(4)
@@ -90,6 +113,7 @@ class MainScreen : BasicScreen("Main") {
                     player.stopVertical()
                 }
             }
+
             ActionListener.InputAction.DOWN -> {
                 isDownPressed = false
                 if (isUpPressed) {
@@ -98,6 +122,7 @@ class MainScreen : BasicScreen("Main") {
                     player.stopVertical()
                 }
             }
+
             ActionListener.InputAction.RIGHT -> {
                 isRightPressed = false
                 if (isLeftPressed) {
@@ -106,6 +131,7 @@ class MainScreen : BasicScreen("Main") {
                     player.stopHorizontal()
                 }
             }
+
             ActionListener.InputAction.LEFT -> {
                 isLeftPressed = false
                 if (isRightPressed) {
@@ -114,6 +140,7 @@ class MainScreen : BasicScreen("Main") {
                     player.stopHorizontal()
                 }
             }
+
             else -> return false
         }
 
