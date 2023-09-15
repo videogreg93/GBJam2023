@@ -19,6 +19,7 @@ import gaia.ui.utils.alignLeft
 import gaia.ui.utils.alignLeftToRightOf
 import gaia.utils.wrappingCursor
 
+// TODO add score and health/hearts to screen
 class MainScreen : BasicScreen("Main") {
 
     lateinit var player: Player
