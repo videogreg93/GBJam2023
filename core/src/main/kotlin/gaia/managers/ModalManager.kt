@@ -32,7 +32,7 @@ class ModalManager {
     }
 
     interface ModalListener {
-        abstract val currentModal: Modal?
+        val currentModal: Modal?
         fun addModal(modal: Modal)
         fun removeModal(modal: Modal)
     }

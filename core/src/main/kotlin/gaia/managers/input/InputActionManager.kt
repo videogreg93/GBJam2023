@@ -14,6 +14,9 @@ import ktx.app.KtxInputAdapter
 import ktx.log.debug
 import ktx.log.info
 import java.io.Console
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 // TODO maybe separate all of these classes into different files
 class InputActionManager : KtxInputAdapter {
@@ -118,10 +121,6 @@ class InputActionManager : KtxInputAdapter {
             if (listener.onActionReleased(action)) return true
         }
         return false
-    }
-
-    override fun mouseMoved(screenX: Int, screenY: Int): Boolean {
-        return super.mouseMoved(screenX, screenY)
     }
 
     fun unsubscribe(listener: ActionListener) {
@@ -261,5 +260,5 @@ interface ActionListener {
 }
 
 val ActionListener.InputAction.prettyName: String
-    get() = name.lowercase().capitalize().replace("_", " ")
+    get() = name.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }.replace("_", " ")
 

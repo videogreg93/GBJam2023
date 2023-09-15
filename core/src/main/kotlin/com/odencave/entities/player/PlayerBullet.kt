@@ -1,11 +1,10 @@
-package entities.player
+package com.odencave.entities.player
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.graphics.Texture
 import com.odencave.assets.Assets
-import com.odencave.i18n.entities.Entity
-import entities.enemy.Enemy
+import com.odencave.entities.Entity
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 
@@ -14,17 +13,18 @@ class PlayerBullet : Entity(bulletAsset.get()) {
 
     override fun act(delta: Float) {
         super.act(delta)
-        x += currentSpeed
+        x += currentSpeed * delta
         if (isCompletelyOutOfBounds()) {
+            Gdx.app.log("PlayerBullet", "Removed because out of bounds")
             removeFromCrew()
         }
     }
 
     override fun onCollision(other: Entity) {
-        if (other is Enemy) {
+        if (other is com.odencave.entities.enemy.Enemy) {
             other.removeFromCrew()
             removeFromCrew()
-            Gdx.app.debug("PlayerBullet", "Killed Enemy!!!")
+            Gdx.app.log("PlayerBullet", "Killed Enemy!!!")
         }
     }
 

@@ -52,8 +52,8 @@ object Shaders {
     val fadeInShader: ShaderProgram
         get() = ShaderProgram(fadeInShaderVertex, fadeInShaderFragment)
 
-    lateinit private var fadeInShaderVertex: FileHandle
-    lateinit private var fadeInShaderFragment: FileHandle
+    private lateinit var fadeInShaderVertex: FileHandle
+    private lateinit var fadeInShaderFragment: FileHandle
 
     fun initShaders() {
         fadeInShaderVertex = Gdx.files.internal("shaders/passthrough.vert")

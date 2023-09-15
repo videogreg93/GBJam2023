@@ -1,16 +1,16 @@
 package com.odencave.i18n.screens
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.odencave.i18n.entities.Entity
-import entities.enemy.Enemy
+import com.odencave.entities.Entity
 import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
 import com.odencave.i18n.entities.enemy.spawner.SpawnConfiguration
-import com.odencave.i18n.entities.player.Player
+import com.odencave.entities.player.Player
+import com.odencave.entities.player.PlayerBullet
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
 import com.odencave.i18n.models.Palette
-import entities.player.PlayerBullet
 import gaia.Globals
 import gaia.managers.MegaManagers
 import gaia.managers.input.ActionListener
@@ -43,13 +43,14 @@ class MainScreen : BasicScreen("Main") {
         player = Player().apply {
             center()
             alignLeft(10f)
+            x -= 30f
         }
         val spawner = EnemySpawner().apply {
             repeat(9) {
                 addEnemy(
                     listOf(
                         SpawnConfiguration(
-                            Enemy().apply {
+                            com.odencave.entities.enemy.Enemy().apply {
                                 moveStraight()
                             },
                             it
@@ -61,7 +62,23 @@ class MainScreen : BasicScreen("Main") {
         }
         crew.addMembers(player, spawner)
         backgroundCrew.addMember(BackgroundGrid())
-        spawner.start()
+
+        player.addAction(
+            Actions.sequence(
+                Actions.run {
+                    MegaManagers.inputActionManager.disableAllInputs()
+                },
+                Actions.moveBy(50f, 0f, 2.2f, Interpolation.fastSlow),
+                Actions.delay(0.2f),
+                Actions.run {
+                    MegaManagers.inputActionManager.enableAllInputs()
+                    player.canBeOutOfBounds = false
+                },
+                Actions.run {
+                    spawner.start()
+                }
+            )
+        )
     }
 
     override fun render(delta: Float) {
@@ -104,7 +121,7 @@ class MainScreen : BasicScreen("Main") {
                     }
                     crew.addMember(bullet)
                     shootDebouncerReady = false
-                    MegaManagers.screenManager.addGlobalAction(Actions.delay(0.1f, Actions.run {
+                    MegaManagers.screenManager.addGlobalAction(Actions.delay(0.3f, Actions.run {
                         shootDebouncerReady = true
                     }))
                 }

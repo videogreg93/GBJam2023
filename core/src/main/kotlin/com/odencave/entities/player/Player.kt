@@ -1,11 +1,10 @@
-package com.odencave.i18n.entities.player
+package com.odencave.entities.player
 
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
 import com.odencave.assets.Assets
-import com.odencave.i18n.entities.Entity
-import entities.player.PlayerBullet
+import com.odencave.entities.Entity
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 import kotlin.math.abs
@@ -14,6 +13,7 @@ class Player : Entity(playerTexture.get()) {
     var xSpeed = 0
     var ySpeed = 0
     var currentSpeed = DEFAULT_SPEED
+    var canBeOutOfBounds = true
 
     fun stop() {
         xSpeed = 0
@@ -49,11 +49,11 @@ class Player : Entity(playerTexture.get()) {
         val previousPosition = Vector2(x,y)
         val speedVector = Vector2(xSpeed.toFloat(), ySpeed.toFloat()).nor()
         x += (xSpeed * abs(speedVector.x)) * delta
-        if (isPartlyOutOfBounds()) {
+        if (!canBeOutOfBounds && isPartlyOutOfBounds()) {
             x = previousPosition.x
         }
         y += (ySpeed * abs(speedVector.y)) * delta
-        if (isPartlyOutOfBounds()) {
+        if (!canBeOutOfBounds && isPartlyOutOfBounds()) {
             y = previousPosition.y
         }
     }

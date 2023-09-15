@@ -12,7 +12,7 @@ fun List<*>.wrappingCursor(value: Int): Int = when {
     }
 }
 
-public inline fun <T> kotlin.collections.Iterable<T>.sumByFloat(selector: (T) -> kotlin.Float): kotlin.Float {
+inline fun <T> Iterable<T>.sumByFloat(selector: (T) -> Float): Float {
     var sum: Float = 0f
     for (element in this) {
         sum += selector(element)

@@ -1,4 +1,4 @@
-package com.odencave.i18n.entities
+package com.odencave.entities
 
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.graphics.Texture

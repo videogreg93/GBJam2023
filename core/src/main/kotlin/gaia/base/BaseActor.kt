@@ -173,7 +173,7 @@ open class BaseActor(texture: Texture? = null, x: Float = 0f, y: Float = 0f) : A
         }
     }
 
-    open internal fun updateSprite() {
+    internal open fun updateSprite() {
         sprite?.setPosition(visualX, visualY)
         sprite?.rotation = rotation
         sprite?.setOrigin(originX, originY)

@@ -32,7 +32,7 @@ import ktx.app.clearScreen
 import ktx.async.KtxAsync
 import kotlin.system.exitProcess
 
-class MainApplication() : KtxGame<BasicScreen>(),
+class MainApplication : KtxGame<BasicScreen>(),
     ScreenManager.ChangeScreenListener, ModalManager.ModalListener, KtxInputAdapter {
     var isFading = false
     var fadeDirection = true
@@ -96,7 +96,7 @@ class MainApplication() : KtxGame<BasicScreen>(),
         setScreen(screenClass)
     }
 
-    override fun getCurrentScreen(): BasicScreen? {
+    override fun getCurrentScreen(): BasicScreen {
         return shownScreen
     }
 
