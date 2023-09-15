@@ -1,4 +1,4 @@
-package com.odencave.i18n.entities.enemy
+package entities.enemy
 
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.graphics.Texture
@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.assets.Assets
 import com.odencave.i18n.entities.Entity
+import com.odencave.i18n.entities.enemy.MoveStraightAction
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 

@@ -3,7 +3,6 @@ package com.odencave.i18n.entities.enemy.spawner
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.odencave.i18n.entities.enemy.Enemy
 import gaia.Globals
 import gaia.base.BaseActor
 

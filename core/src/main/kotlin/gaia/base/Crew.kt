@@ -58,6 +58,8 @@ class Crew(val batch: SpriteBatch, private val camera: Camera = OrthographicCame
         }
     }
 
+    inline fun <reified T: BaseActor> getAllOf() = members.filterIsInstance<T>()
+
     /**
      * Calls act on each actor, modifying [delta] by that actor's speedMultiplier
      */

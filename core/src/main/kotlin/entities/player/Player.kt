@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
 import com.odencave.assets.Assets
 import com.odencave.i18n.entities.Entity
+import entities.player.PlayerBullet
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 import kotlin.math.abs

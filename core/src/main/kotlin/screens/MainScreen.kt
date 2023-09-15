@@ -1,17 +1,22 @@
 package com.odencave.i18n.screens
 
 import com.badlogic.gdx.Gdx
-import com.odencave.i18n.entities.enemy.Enemy
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.odencave.i18n.entities.Entity
+import entities.enemy.Enemy
 import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
 import com.odencave.i18n.entities.enemy.spawner.SpawnConfiguration
 import com.odencave.i18n.entities.player.Player
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
 import com.odencave.i18n.models.Palette
+import entities.player.PlayerBullet
 import gaia.Globals
+import gaia.managers.MegaManagers
 import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
 import gaia.ui.utils.alignLeft
+import gaia.ui.utils.alignLeftToRightOf
 import gaia.utils.wrappingCursor
 
 class MainScreen : BasicScreen("Main") {
@@ -30,6 +35,7 @@ class MainScreen : BasicScreen("Main") {
     var isDownPressed = false
     var isRightPressed = false
     var isLeftPressed = false
+    var shootDebouncerReady = true
 
     override fun firstShown() {
         super.firstShown()
@@ -65,6 +71,7 @@ class MainScreen : BasicScreen("Main") {
         batch.shader.setUniformf("inputColor2", colors[1])
         batch.shader.setUniformf("inputColor3", colors[2])
         batch.shader.setUniformf("inputColor4", colors[3])
+        checkCollisions()
     }
 
     override fun onAction(action: ActionListener.InputAction): Boolean {
@@ -87,6 +94,20 @@ class MainScreen : BasicScreen("Main") {
             ActionListener.InputAction.LEFT -> {
                 isLeftPressed = true
                 player.moveLeft()
+            }
+
+            ActionListener.InputAction.SHOOT -> {
+                if (shootDebouncerReady) {
+                    val bullet = PlayerBullet().apply {
+                        centerOn(player)
+                        alignLeftToRightOf(player, 1f)
+                    }
+                    crew.addMember(bullet)
+                    shootDebouncerReady = false
+                    MegaManagers.screenManager.addGlobalAction(Actions.delay(0.1f, Actions.run {
+                        shootDebouncerReady = true
+                    }))
+                }
             }
 
             ActionListener.InputAction.ONE -> updateResolution(1)
@@ -145,6 +166,21 @@ class MainScreen : BasicScreen("Main") {
         }
 
         return true
+    }
+
+    private fun checkCollisions() {
+        val entities = crew.getAllOf<Entity>()
+        val size = entities.size
+        for (i in 0 until size) {
+            val entity = entities[i]
+            for (j in i + 1 until size) {
+                val other = entities[j]
+                if (entity.isCollidingWith(other)) {
+                    entity.onCollision(other)
+                    other.onCollision(entity)
+                }
+            }
+        }
     }
 
     private fun updateResolution(multiplier: Int) {
