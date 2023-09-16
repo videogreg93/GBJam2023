@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import gaia.Globals.WORLD_HEIGHT
 import gaia.Globals.WORLD_WIDTH
+import gaia.actions.CameraShakeAction
 import gaia.base.BaseActor
 import gaia.base.Clickable
 import gaia.base.Crew
@@ -125,11 +126,11 @@ abstract class BasicScreen(
         }
     }
 
-//    fun shakeCamera(duration: Float = 0.4f, power: Float = 3.2f) {
-//        MegaManagers.screenManager.addGlobalAction(
-//            CameraShakeAction(camera, duration, power)
-//        )
-//    }
+    fun shakeCamera(duration: Float = 0.4f, power: Float = 3.2f) {
+        MegaManagers.screenManager.addGlobalAction(
+            CameraShakeAction(camera, duration, power)
+        )
+    }
 
     fun addLetterboxes(top: Letterbox, bottom: Letterbox) {
         hudCrew.addMembers(top, bottom)
