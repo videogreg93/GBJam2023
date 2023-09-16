@@ -7,6 +7,7 @@ import com.odencave.entities.Entity
 import com.odencave.entities.ScoreHandler
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.Enemy.Companion.moveStraightEnemy
+import com.odencave.entities.enemy.SandyEnemy
 import com.odencave.entities.player.Player
 import com.odencave.entities.player.PlayerBullet
 import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
@@ -128,6 +129,36 @@ class MainScreen : BasicScreen("Main") {
                 ),
                 2f
             )
+
+            // Sandy introduction
+            addEnemy(
+                listOf(
+                    SpawnConfiguration(
+                        SandyEnemy(),
+                        5
+                    )
+                ),
+                2f
+            )
+            wait(1.5f)
+            addEnemy(
+                listOf(
+                    SpawnConfiguration(
+                        SandyEnemy(),
+                        2
+                    )
+                )
+            )
+            wait(1.5f)
+            addEnemy(
+                listOf(
+                    SpawnConfiguration(
+                        SandyEnemy(),
+                        3
+                    )
+                )
+            )
+            wait(5f)
         }
     }
 

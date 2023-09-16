@@ -9,11 +9,13 @@ import com.odencave.assets.Assets
 import com.odencave.entities.Entity
 import com.odencave.events.EnemyDestroyedEvent
 import com.odencave.i18n.entities.enemy.MoveStraightAction
+import gaia.base.Crew
 import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 
-class Enemy : Entity(johnAsset.get()) {
+open class Enemy(texture: Texture = johnAsset.get()) : Entity(texture) {
+
     var scoreValue = 10
     var currentMoveSpeed = DEFAULT_ENEMY_MOVE_SPEED
 
