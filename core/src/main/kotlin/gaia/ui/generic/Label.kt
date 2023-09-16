@@ -36,7 +36,7 @@ open class Label(var text: String, val font: BitmapFont, x: Float = 0f, y: Float
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         if (alpha == 1f && shouldDraw) {
-            font.draw(batch, text, x, y)
+            font.draw(batch, text, x, y + height)
         }
     }
 

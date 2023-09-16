@@ -4,10 +4,14 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.entities.Entity
-import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
-import com.odencave.i18n.entities.enemy.spawner.SpawnConfiguration
+import com.odencave.entities.ScoreHandler
+import com.odencave.entities.enemy.Enemy
+import com.odencave.entities.enemy.Enemy.Companion.moveStraightEnemy
 import com.odencave.entities.player.Player
 import com.odencave.entities.player.PlayerBullet
+import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
+import com.odencave.i18n.entities.enemy.spawner.EnemySpawner.Companion.LANE_COUNT
+import com.odencave.i18n.entities.enemy.spawner.SpawnConfiguration
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
 import com.odencave.i18n.models.Palette
@@ -17,6 +21,8 @@ import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
 import gaia.ui.utils.alignLeft
 import gaia.ui.utils.alignLeftToRightOf
+import gaia.ui.utils.alignRight
+import gaia.ui.utils.alignTop
 import gaia.utils.wrappingCursor
 
 // TODO add score and health/hearts to screen
@@ -46,21 +52,7 @@ class MainScreen : BasicScreen("Main") {
             alignLeft(10f)
             x -= 30f
         }
-        val spawner = EnemySpawner().apply {
-            repeat(9) {
-                addEnemy(
-                    listOf(
-                        SpawnConfiguration(
-                            com.odencave.entities.enemy.Enemy().apply {
-                                moveStraight()
-                            },
-                            it
-                        ),
-                    ),
-                    0.5f
-                )
-            }
-        }
+        val spawner = getSpawner()
         crew.addMembers(player, spawner)
         backgroundCrew.addMember(BackgroundGrid())
 
@@ -80,6 +72,63 @@ class MainScreen : BasicScreen("Main") {
                 }
             )
         )
+        crew.addMembers(ScoreHandler().apply {
+            alignTop( -10f)
+            alignLeft(10f)
+        })
+    }
+
+    private fun getSpawner(): EnemySpawner {
+        return EnemySpawner().apply {
+            repeat(LANE_COUNT) {
+                addEnemy(
+                    listOf(
+                        SpawnConfiguration(
+                            Enemy().apply {
+                                moveStraight()
+                            },
+                            it
+                        ),
+                    ),
+                    if (it == 0) 0f else 0.5f
+                )
+            }
+            wait(2f)
+            repeat(LANE_COUNT) {
+                addEnemy(
+                    listOf(
+                        SpawnConfiguration(
+                            Enemy().apply {
+                                moveStraight()
+                            },
+                            8 - it
+                        ),
+                    ),
+                    if (it == 0) 0f else 0.5f
+                )
+            }
+            wait(2f)
+            addEnemy(
+                listOf(
+                    SpawnConfiguration(moveStraightEnemy(), 2),
+                    SpawnConfiguration(moveStraightEnemy(), 6),
+                )
+            )
+            addEnemy(
+                listOf(
+                    SpawnConfiguration(moveStraightEnemy(), 3),
+                    SpawnConfiguration(moveStraightEnemy(), 4),
+                ),
+                2f
+            )
+            addEnemy(
+                listOf(
+                    SpawnConfiguration(moveStraightEnemy(), 5),
+                    SpawnConfiguration(moveStraightEnemy(), 7),
+                ),
+                2f
+            )
+        }
     }
 
     override fun render(delta: Float) {

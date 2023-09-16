@@ -1,29 +1,24 @@
 package gaia.managers.fonts
 
-//import gaia.assets.Assets
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
+import com.odencave.assets.Assets
 import gaia.managers.MegaManagers
 
 class FontManager : MegaManagers.Manager {
     lateinit var defaultFont: BitmapFont
 
-    lateinit var chooseCharacterFont: BitmapFont
-
     override fun init() {
-//        val generator = FreeTypeFontGenerator(Gdx.files.internal(Assets.Fonts.grand9k))
-//        val params = FreeTypeFontGenerator.FreeTypeFontParameter().apply {
-//            size = 32
-//            color = Color.BLACK
-//        }
-//
-//        defaultFont = generator.generateFont(params)
+        val generator = FreeTypeFontGenerator(Gdx.files.internal(Assets.Fonts.font1))
+        val params = FreeTypeFontGenerator.FreeTypeFontParameter().apply {
+            size = 12
+            color = Color.WHITE
+        }
 
+        defaultFont = generator.generateFont(params)
 
-    }
-
-    companion object {
-        const val FONT_FOLDER = "fonts"
-        const val CARD_FONT = "m5x7.ttf"
-        const val SPELL_FONT = "grand9k.ttf"
+        generator.dispose()
     }
 }

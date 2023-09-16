@@ -3,11 +3,12 @@ package com.odencave.i18n.entities.enemy.spawner
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.odencave.entities.enemy.spawner.SpawnerAction
 import gaia.Globals
 import gaia.base.BaseActor
 
 class EnemySpawner : BaseActor() {
-    private val amountOfLanes = 9
+    private val amountOfLanes = LANE_COUNT
     private val distanceBetweenLanes: Int
         get() = Globals.WORLD_HEIGHT.toInt() / amountOfLanes
     private val enemySequenceAction = Actions.sequence()
@@ -21,19 +22,30 @@ class EnemySpawner : BaseActor() {
         return Vector2(spawnX, spawnY)
     }
 
-    fun addEnemy(spawnConfigurations: List<SpawnConfiguration>, delayFromPrevious: Float) {
-        enemySequenceAction.addAction(
-            Actions.delay(delayFromPrevious, Actions.run {
-                spawnConfigurations.forEach {
+    fun addEnemy(configs: List<SpawnConfiguration>, delayFromPrevious: Float = 0f) {
+        val actionToDo = Actions.parallel().apply {
+            configs.forEach {
+                addAction(Actions.run {
                     val spawnPosition = getSpawnPositionForLane(it.lane)
                     it.enemy.setPosition(spawnPosition.x, spawnPosition.y)
                     crew?.addMember(it.enemy)
-                }
-            })
+                })
+            }
+        }
+        enemySequenceAction.addAction(
+            Actions.delay(delayFromPrevious, actionToDo)
         )
+    }
+
+    fun wait(delay: Float) {
+        enemySequenceAction.addAction(Actions.delay(delay))
     }
 
     fun start() {
         addAction(enemySequenceAction)
+    }
+
+    companion object {
+        const val LANE_COUNT = 9
     }
 }

@@ -10,9 +10,8 @@ import gaia.ui.generic.Label
 import gaia.utils.sumByFloat
 import ktx.log.info
 
-// TODO not make margin negative
 fun BaseActor.alignTop(margin: Float = 0f) {
-    y = WORLD_HEIGHT / 2 - height - margin
+    y = WORLD_HEIGHT / 2 - height + margin
 }
 
 fun BaseActor.alignBottom(margin: Float = 0f) {

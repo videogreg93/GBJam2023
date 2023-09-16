@@ -22,7 +22,7 @@ class PlayerBullet : Entity(bulletAsset.get()) {
 
     override fun onCollision(other: Entity) {
         if (other is com.odencave.entities.enemy.Enemy) {
-            other.removeFromCrew()
+            other.destroy()
             removeFromCrew()
             Gdx.app.log("PlayerBullet", "Killed Enemy!!!")
         }

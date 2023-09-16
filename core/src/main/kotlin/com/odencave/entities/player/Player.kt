@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
+import com.odencave.entities.enemy.Enemy
+import gaia.actions.CameraShakeAction
+import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 import kotlin.math.abs
@@ -14,6 +17,7 @@ class Player : Entity(playerTexture.get()) {
     var ySpeed = 0
     var currentSpeed = DEFAULT_SPEED
     var canBeOutOfBounds = true
+    var currentHealth = 3
 
     fun stop() {
         xSpeed = 0
@@ -44,6 +48,14 @@ class Player : Entity(playerTexture.get()) {
         xSpeed = -currentSpeed
     }
 
+    override fun onCollision(other: Entity) {
+        if (other is Enemy) {
+            MegaManagers.screenManager.getCurrentScreen()?.shakeCamera(0.2f, 2f)
+            other.removeFromCrew()
+            currentHealth--
+        }
+    }
+
     override fun act(delta: Float) {
         super.act(delta)
         val previousPosition = Vector2(x,y)
@@ -60,7 +72,7 @@ class Player : Entity(playerTexture.get()) {
 
 
     companion object {
-        private const val DEFAULT_SPEED = 50
+        private const val DEFAULT_SPEED = 44
 
         @Asset
         private val playerTexture = AssetDescriptor(Assets.Player.player, Texture::class.java)
