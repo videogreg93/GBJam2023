@@ -8,6 +8,7 @@ import com.odencave.entities.ScoreHandler
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.Enemy.Companion.moveStraightEnemy
 import com.odencave.entities.enemy.SandyEnemy
+import com.odencave.entities.player.HealthIndicator
 import com.odencave.entities.player.Player
 import com.odencave.entities.player.PlayerBullet
 import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
@@ -20,10 +21,7 @@ import gaia.Globals
 import gaia.managers.MegaManagers
 import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
-import gaia.ui.utils.alignLeft
-import gaia.ui.utils.alignLeftToRightOf
-import gaia.ui.utils.alignRight
-import gaia.ui.utils.alignTop
+import gaia.ui.utils.*
 import gaia.utils.wrappingCursor
 
 // TODO add score and health/hearts to screen
@@ -73,10 +71,16 @@ class MainScreen : BasicScreen("Main") {
                 }
             )
         )
-        crew.addMembers(ScoreHandler().apply {
+        val scoreHandler = ScoreHandler().apply {
             alignTop( -10f)
             alignLeft(10f)
-        })
+        }
+        val healthIndicator = HealthIndicator(player).apply {
+            alignTopToBottomOf(scoreHandler)
+            alignLeft(10f)
+        }
+        crew.addMembers(scoreHandler, healthIndicator)
+
     }
 
     private fun getSpawner(): EnemySpawner {

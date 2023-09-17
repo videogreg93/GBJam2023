@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.entities.enemy.spawner.SpawnerAction
 import gaia.Globals
 import gaia.base.BaseActor
+import kotlin.reflect.jvm.isAccessible
 
 class EnemySpawner : BaseActor() {
     private val amountOfLanes = LANE_COUNT
@@ -20,6 +21,10 @@ class EnemySpawner : BaseActor() {
         val spawnY = (-Globals.WORLD_HEIGHT/2) + (lane * distanceBetweenLanes)
         val spawnX = Globals.WORLD_WIDTH/2
         return Vector2(spawnX, spawnY)
+    }
+
+    fun skipCurrentWave() {
+        enemySequenceAction.actions.first().actor = null
     }
 
     fun addEnemy(configs: List<SpawnConfiguration>, delayFromPrevious: Float = 0f) {
