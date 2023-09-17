@@ -10,12 +10,20 @@ import gaia.managers.assets.AssetManager.Companion.get
 
 class HealthIndicator(val player: Player) : BaseActor() {
     private val heartTexture by lazy { heartAsset.get() }
-    private val heartMargin = 8
+    private val heartMargin = 2
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         repeat(player.currentHealth) {
-            batch.draw(heartTexture, x + (it * heartMargin), y)
+            batch.draw(heartTexture, x + (it * (heartMargin + heartTexture.width)), y)
         }
+    }
+
+    override fun getHeight(): Float {
+        return heartTexture.height.toFloat()
+    }
+
+    override fun getWidth(): Float {
+        return player.currentHealth * (heartTexture.width.toFloat() + heartMargin)
     }
 
     companion object {

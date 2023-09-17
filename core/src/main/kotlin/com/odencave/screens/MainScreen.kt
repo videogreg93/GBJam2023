@@ -21,7 +21,10 @@ import gaia.Globals
 import gaia.managers.MegaManagers
 import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
-import gaia.ui.utils.*
+import gaia.ui.utils.alignLeft
+import gaia.ui.utils.alignLeftToRightOf
+import gaia.ui.utils.alignTop
+import gaia.ui.utils.alignTopToBottomOf
 import gaia.utils.wrappingCursor
 
 // TODO add score and health/hearts to screen
@@ -72,12 +75,12 @@ class MainScreen : BasicScreen("Main") {
             )
         )
         val scoreHandler = ScoreHandler().apply {
-            alignTop( -10f)
-            alignLeft(10f)
+            alignTop(-2f)
+            alignLeft(8f)
         }
         val healthIndicator = HealthIndicator(player).apply {
-            alignTopToBottomOf(scoreHandler)
-            alignLeft(10f)
+            alignTopToBottomOf(scoreHandler, -12f)
+            alignLeft(8f)
         }
         crew.addMembers(scoreHandler, healthIndicator)
 
@@ -216,6 +219,16 @@ class MainScreen : BasicScreen("Main") {
             ActionListener.InputAction.TWO -> updateResolution(2)
             ActionListener.InputAction.THREE -> updateResolution(4)
             ActionListener.InputAction.FOUR -> updateResolution(8)
+            ActionListener.InputAction.SEVEN -> {
+                if (Globals.godMode) {
+                    Globals.godMode = false
+                    Globals.gameSpeed = 1f
+                } else {
+                    Globals.godMode = true
+                    Globals.gameSpeed = 3f
+                }
+            }
+
             ActionListener.InputAction.ZERO -> {
                 selectedPaletteIndex++
                 Globals.currentBackgroundColor = selectedPalette.color4

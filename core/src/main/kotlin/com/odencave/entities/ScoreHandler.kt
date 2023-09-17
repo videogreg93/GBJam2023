@@ -7,7 +7,7 @@ import gaia.managers.MegaManagers
 import gaia.managers.events.EventListener
 import gaia.ui.generic.Label
 
-class ScoreHandler: Label("", MegaManagers.fontManager.defaultFont), EventListener<EnemyDestroyedEvent> {
+class ScoreHandler: Label("0", MegaManagers.fontManager.defaultFont), EventListener<EnemyDestroyedEvent> {
     var currentScore = 0
 
     override fun onAddedToCrew(crew: Crew) {

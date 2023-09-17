@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
 import com.odencave.entities.enemy.Enemy
+import gaia.Globals
 import gaia.actions.CameraShakeAction
 import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
@@ -52,7 +53,9 @@ class Player : Entity(playerTexture.get()) {
         if (other is Enemy) {
             MegaManagers.screenManager.getCurrentScreen()?.shakeCamera(0.2f, 2f)
             other.removeFromCrew()
-            currentHealth--
+            if (!Globals.godMode) {
+                currentHealth--
+            }
         }
     }
 

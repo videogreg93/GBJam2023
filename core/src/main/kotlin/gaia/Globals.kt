@@ -8,4 +8,6 @@ object Globals {
     const val WORLD_WIDTH = 160f
     const val WORLD_HEIGHT = 144f
     var currentBackgroundColor = Palette.allPalettes.first().color4
+    var gameSpeed = 1f
+    var godMode = false
 }

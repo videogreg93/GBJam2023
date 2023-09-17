@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.entities.enemy.spawner.SpawnerAction
 import gaia.Globals
 import gaia.base.BaseActor
+import gaia.ui.utils.skip
 import kotlin.reflect.jvm.isAccessible
 
 class EnemySpawner : BaseActor() {
@@ -24,7 +25,7 @@ class EnemySpawner : BaseActor() {
     }
 
     fun skipCurrentWave() {
-        enemySequenceAction.actions.first().actor = null
+        enemySequenceAction.skip()
     }
 
     fun addEnemy(configs: List<SpawnConfiguration>, delayFromPrevious: Float = 0f) {

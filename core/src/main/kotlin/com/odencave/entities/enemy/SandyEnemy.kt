@@ -16,7 +16,7 @@ class SandyEnemy: Enemy(sandyAsset.get()) {
             addAction(Actions.moveBy(-moveAmount, 0f, 2f, Interpolation.fastSlow))
             addAction(Actions.delay(2f))
             // TODO shoot player
-            addAction(Actions.moveBy(moveAmount, 0f, 2f, Interpolation.slowFast))
+            addAction(Actions.moveBy(moveAmount + 10, 0f, 2f, Interpolation.slowFast))
         }
         addAction(sequence)
     }

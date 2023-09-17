@@ -24,6 +24,10 @@ open class Label(var text: String, val font: BitmapFont, x: Float = 0f, y: Float
         drawIndex = 10
     }
 
+    override fun getY(): Float {
+        return super.getY() + height
+    }
+
     override fun act(delta: Float) {
         super.act(delta)
         centerHorizontalCallback?.let {
@@ -37,7 +41,7 @@ open class Label(var text: String, val font: BitmapFont, x: Float = 0f, y: Float
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         if (alpha == 1f && shouldDraw) {
-            font.draw(batch, text, x, y + height)
+            font.draw(batch, text, x, y)
         }
     }
 
