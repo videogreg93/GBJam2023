@@ -30,4 +30,11 @@ const val out = "shaders/out.png"}
     object Sounds {
 const val bullet_ogg_sound = "sounds/bullet.ogg"
 const val playerHit_ogg_sound = "sounds/playerHit.ogg"}
+    object World {
+const val boss = "world/boss.png"
+const val tinyShip = "world/tinyShip.png"
+const val world1 = "world/world1.png"
+const val world2 = "world/world2.png"
+const val world3 = "world/world3.png"
+const val worldLocked = "world/worldLocked.png"}
 }

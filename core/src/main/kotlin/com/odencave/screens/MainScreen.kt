@@ -17,6 +17,7 @@ import com.odencave.i18n.entities.enemy.spawner.SpawnConfiguration
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
 import com.odencave.i18n.models.Palette
+import com.odencave.ui.MapModal
 import gaia.Globals
 import gaia.managers.MegaManagers
 import gaia.managers.input.ActionListener
@@ -52,16 +53,45 @@ class MainScreen : BasicScreen("Main") {
         player = Player().apply {
             center()
             alignLeft(10f)
+            shouldDraw = false
             x -= 30f
         }
         val spawner = getSpawner()
-        crew.addMembers(player, spawner)
+        crew.addMembers(spawner)
         backgroundCrew.addMember(BackgroundGrid())
+
+        // intro sequence
+        val safeCrew = crew
+        val map = MapModal().apply {
+            center()
+            alignTop()
+            y += Globals.WORLD_HEIGHT / 2
+            addAction(
+                Actions.sequence(
+                    Actions.moveBy(0f, -Globals.WORLD_HEIGHT / 2, 2.5f, Interpolation.fastSlow),
+                    Actions.run {
+                        showShipCursor()
+                    },
+                    Actions.delay(3f),
+                    Actions.run {
+                        hideShipCursor()
+                        safeCrew.addMember(player)
+                    },
+                    Actions.moveBy(0f, Globals.WORLD_HEIGHT / 2, 2f, Interpolation.slowFast),
+                    Actions.run {
+                        removeFromCrew()
+                    }
+                )
+            )
+        }
+        crew.addMember(map)
+
 
         player.addAction(
             Actions.sequence(
                 Actions.run {
                     MegaManagers.inputActionManager.disableAllInputs()
+                    player.shouldDraw = true
                 },
                 Actions.moveBy(50f, 0f, 2.2f, Interpolation.fastSlow),
                 Actions.delay(0.2f),
@@ -69,7 +99,9 @@ class MainScreen : BasicScreen("Main") {
                     MegaManagers.inputActionManager.enableAllInputs()
                     player.canBeOutOfBounds = false
                 },
+                Actions.delay(5f),
                 Actions.run {
+                    // this is when the game actually starts
                     spawner.start()
                 }
             )
