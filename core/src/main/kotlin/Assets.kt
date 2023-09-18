@@ -8,6 +8,7 @@ object Assets {
 const val one = "backgrounds/one.png"}
 const val border = "border.png"
     object Enemy {
+const val bullet = "enemy/bullet.png"
 const val john = "enemy/john.png"
 const val sandy = "enemy/sandy.png"}
     object Fonts {

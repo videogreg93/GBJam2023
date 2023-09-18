@@ -321,6 +321,8 @@ open class BaseActor(texture: Texture? = null, x: Float = 0f, y: Float = 0f) : A
         } ?: ktx.log.error { "Sprite is null, cannot assign new texture for $name" }
     }
 
+    fun pos(): Vector2 = Vector2(x,y)
+
     companion object {
         val UNFOCUSED_COLOR = Color.GRAY
         const val MIN_GRID_X = 1
