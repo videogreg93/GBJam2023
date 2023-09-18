@@ -168,7 +168,6 @@ class MainScreen : BasicScreen("Main") {
                 ),
                 2f
             )
-
             // Sandy introduction
             addEnemy(
                 listOf(
@@ -198,6 +197,25 @@ class MainScreen : BasicScreen("Main") {
                 )
             )
             wait(5f)
+            // ramp up difficulty
+            val lane1Actions = (0..5).flatMap {
+                listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 0)))
+            }
+            val lane2Actions = listOf(Actions.delay(1f)) + (0..5).flatMap {
+                listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 2)))
+            }
+            val lane3Actions = listOf(Actions.delay(3f)) + (0..5).flatMap {
+                listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 4)))
+            }
+            val lane4Actions = listOf(Actions.delay(2f)) + (0..5).flatMap {
+                listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 6)))
+            }
+            addActionToSequence(Actions.parallel(
+                Actions.sequence(*lane1Actions.toTypedArray()),
+                Actions.sequence(*lane2Actions.toTypedArray()),
+                Actions.sequence(*lane3Actions.toTypedArray()),
+                Actions.sequence(*lane4Actions.toTypedArray()),
+            ))
         }
     }
 
@@ -257,7 +275,7 @@ class MainScreen : BasicScreen("Main") {
                     Globals.gameSpeed = 1f
                 } else {
                     Globals.godMode = true
-                    Globals.gameSpeed = 3f
+                    Globals.gameSpeed = 5f
                 }
             }
 

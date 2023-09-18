@@ -1,6 +1,5 @@
 package gaia
 
-import com.badlogic.gdx.graphics.Color
 import com.odencave.i18n.models.Palette
 
 

@@ -19,7 +19,10 @@ open class Enemy(texture: Texture = johnAsset.get()) : Entity(texture) {
     var scoreValue = 10
     var currentMoveSpeed = DEFAULT_ENEMY_MOVE_SPEED
 
-    fun moveStraight() = addMovementAction(MoveStraightAction())
+    fun moveStraight(speed: Float = DEFAULT_ENEMY_MOVE_SPEED) {
+        currentMoveSpeed = speed
+        addMovementAction(MoveStraightAction())
+    }
 
     private fun addMovementAction(action: Action) = addAction(Actions.forever(action))
 
@@ -41,8 +44,8 @@ open class Enemy(texture: Texture = johnAsset.get()) : Entity(texture) {
     companion object {
         const val DEFAULT_ENEMY_MOVE_SPEED = 45f
 
-        fun moveStraightEnemy() = Enemy().apply {
-            moveStraight()
+        fun moveStraightEnemy(speed: Float = DEFAULT_ENEMY_MOVE_SPEED) = Enemy().apply {
+            moveStraight(speed)
         }
 
         @Asset

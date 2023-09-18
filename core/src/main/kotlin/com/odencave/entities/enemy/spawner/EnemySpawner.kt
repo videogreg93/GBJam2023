@@ -2,12 +2,12 @@ package com.odencave.i18n.entities.enemy.spawner
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.odencave.entities.enemy.spawner.SpawnerAction
+import com.odencave.entities.enemy.Enemy
 import gaia.Globals
 import gaia.base.BaseActor
 import gaia.ui.utils.skip
-import kotlin.reflect.jvm.isAccessible
 
 class EnemySpawner : BaseActor() {
     private val amountOfLanes = LANE_COUNT
@@ -40,6 +40,28 @@ class EnemySpawner : BaseActor() {
         }
         enemySequenceAction.addAction(
             Actions.delay(delayFromPrevious, actionToDo)
+        )
+    }
+
+    fun addEnemyAction(config: SpawnConfiguration): Action {
+        return Actions.run {
+            val spawnPosition = getSpawnPositionForLane(config.lane)
+            config.enemy.setPosition(spawnPosition.x, spawnPosition.y)
+            crew?.addMember(config.enemy)
+        }
+    }
+
+    fun addActionToSequence(action: Action) = enemySequenceAction.addAction(action)
+
+    fun addJohn(lane: Int, delay: Float = 0f) {
+        addEnemy(
+            listOf(
+                SpawnConfiguration(
+                    Enemy.moveStraightEnemy(),
+                    lane
+                )
+            ),
+            delay
         )
     }
 
