@@ -129,7 +129,7 @@ class MainApplication : KtxGame<BasicScreen>(),
         val deltaTime = if (modals.lastOrNull()?.pauseMainScreen == true) 0f else Gdx.graphics.deltaTime
         val bgColor = Globals.currentBackgroundColor
         clearScreen(bgColor.x, bgColor.y, bgColor.z, 1f)
-        currentScreen.render(deltaTime)
+        currentScreen.render(deltaTime * Globals.gameSpeed)
         handleModal()
 //        MegaManagers.devTools?.render()
         // TODO CLEANER WAY OF DOING PERIODIC WORK

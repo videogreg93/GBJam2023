@@ -8,12 +8,22 @@ class EventManager {
     private val listeners = HashMap<String, ArrayList<EventListener<EventInstance>>>()
     private val toRemove = ArrayList<Pair<String, EventListener<*>>>()
 
+    inline fun <reified T: EventInstance> subscribeTo(listener: EventListener<*>) {
+        val id = T::class.simpleName ?: error("Cannot use event listener with abstract class")
+        subscribeTo(id, listener)
+    }
+
     fun subscribeTo(eventType: String, listener: EventListener<*>) {
         val list = listeners.getOrDefault(eventType, ArrayList())
         (listener as? EventListener<EventInstance>)?.let {
             list.add(it)
             listeners.set(eventType, list)
         }
+    }
+
+    inline fun <reified T: EventInstance> unsubscribe(listener: EventListener<*>) {
+        val id = T::class.simpleName ?: error("Cannot use event listener with abstract class")
+        unsubscribe(id, listener)
     }
 
     fun unsubscribe(eventType: String, listener: EventListener<*>) {

@@ -19,8 +19,13 @@ open class Label(var text: String, val font: BitmapFont, x: Float = 0f, y: Float
     var centerHorizontalCallback: (() -> Float)? = null
     var centerVerticallyCallback: (() -> Float)? = null
 
+
     init {
         drawIndex = 10
+    }
+
+    override fun getY(): Float {
+        return super.getY() + height
     }
 
     override fun act(delta: Float) {

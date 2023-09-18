@@ -99,6 +99,7 @@ open class BaseActor(texture: Texture? = null, x: Float = 0f, y: Float = 0f) : A
             x + width / 2f,
             y + height / 2f
         )
+        setAbsoluteOrigin(centerPoint.x, centerPoint.y)
         currentAnimation?.let {
             currentAnimationTime += delta
         }

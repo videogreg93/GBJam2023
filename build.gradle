@@ -57,7 +57,7 @@ object Assets {
     return name.contains('.mp3') || name.contains('.wav') || name.contains('.ogg')
   }
   ext.isFont = { String name ->
-    return name.contains('.ttf')
+    return name.contains('.ttf') || name.contains('.otf')
   }
   ext.isValidAsset = { String name ->
     return isImage(name) || isSound(name) || isFont(name)
@@ -70,6 +70,7 @@ object Assets {
       .replace(".mp3", "")
       .replace(".wav", "")
       .replace(".ttf", "")
+      .replace(".otf", "")
       .replace("-", "_")
       .replace(".", "_")
       .replace(" ", "_")
