@@ -9,6 +9,7 @@ object Globals {
     var currentBackgroundColor = Palette.allPalettes.first().color4
     var gameSpeed = 1f
     var godMode = false
+    var startAtWave: Int = 3
 
     var world2Unlocked = false
     var world3Unlocked = false

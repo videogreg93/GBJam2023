@@ -120,103 +120,123 @@ class MainScreen : BasicScreen("Main") {
 
     private fun getSpawner(): EnemySpawner {
         return EnemySpawner().apply {
-            repeat(LANE_COUNT) {
-                addEnemy(
-                    listOf(
-                        SpawnConfiguration(
-                            Enemy().apply {
-                                moveStraight()
-                            },
-                            it
-                        ),
-                    ),
-                    if (it == 0) 0f else 0.5f
-                )
+            wave(1) {
+                wave1()
             }
-            wait(2f)
-            repeat(LANE_COUNT) {
-                addEnemy(
-                    listOf(
-                        SpawnConfiguration(
-                            Enemy().apply {
-                                moveStraight()
-                            },
-                            8 - it
-                        ),
-                    ),
-                    if (it == 0) 0f else 0.5f
-                )
+            wave(2) {
+                wave2()
             }
-            wait(2f)
-            addEnemy(
-                listOf(
-                    SpawnConfiguration(moveStraightEnemy(), 2),
-                    SpawnConfiguration(moveStraightEnemy(), 6),
-                )
-            )
-            addEnemy(
-                listOf(
-                    SpawnConfiguration(moveStraightEnemy(), 3),
-                    SpawnConfiguration(moveStraightEnemy(), 4),
-                ),
-                2f
-            )
-            addEnemy(
-                listOf(
-                    SpawnConfiguration(moveStraightEnemy(), 5),
-                    SpawnConfiguration(moveStraightEnemy(), 7),
-                ),
-                2f
-            )
-            // Sandy introduction
-            addEnemy(
-                listOf(
-                    SpawnConfiguration(
-                        SandyEnemy(),
-                        5
-                    )
-                ),
-                2f
-            )
-            wait(1.5f)
-            addEnemy(
-                listOf(
-                    SpawnConfiguration(
-                        SandyEnemy(),
-                        2
-                    )
-                )
-            )
-            wait(1.5f)
-            addEnemy(
-                listOf(
-                    SpawnConfiguration(
-                        SandyEnemy(),
-                        3
-                    )
-                )
-            )
-            wait(5f)
-            // ramp up difficulty
-            val lane1Actions = (0..5).flatMap {
-                listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 0)))
+            wave(3) {
+                wave3()
             }
-            val lane2Actions = listOf(Actions.delay(1f)) + (0..5).flatMap {
-                listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 2)))
-            }
-            val lane3Actions = listOf(Actions.delay(3f)) + (0..5).flatMap {
-                listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 4)))
-            }
-            val lane4Actions = listOf(Actions.delay(2f)) + (0..5).flatMap {
-                listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 6)))
-            }
-            addActionToSequence(Actions.parallel(
+        }
+    }
+
+    private fun EnemySpawner.wave3() {
+        // ramp up difficulty
+        val lane1Actions = (0..5).flatMap {
+            listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 0)))
+        }
+        val lane2Actions = listOf(Actions.delay(1f)) + (0..5).flatMap {
+            listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 2)))
+        }
+        val lane3Actions = listOf(Actions.delay(3f)) + (0..5).flatMap {
+            listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 4)))
+        }
+        val lane4Actions = listOf(Actions.delay(2f)) + (0..5).flatMap {
+            listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 6)))
+        }
+        addActionToSequence(
+            Actions.parallel(
                 Actions.sequence(*lane1Actions.toTypedArray()),
                 Actions.sequence(*lane2Actions.toTypedArray()),
                 Actions.sequence(*lane3Actions.toTypedArray()),
                 Actions.sequence(*lane4Actions.toTypedArray()),
-            ))
+            )
+        )
+    }
+
+    private fun EnemySpawner.wave2() {
+        // Sandy introduction
+        addEnemy(
+            listOf(
+                SpawnConfiguration(
+                    SandyEnemy(),
+                    5
+                )
+            ),
+            2f
+        )
+        wait(1.5f)
+        addEnemy(
+            listOf(
+                SpawnConfiguration(
+                    SandyEnemy(),
+                    2
+                )
+            )
+        )
+        wait(1.5f)
+        addEnemy(
+            listOf(
+                SpawnConfiguration(
+                    SandyEnemy(),
+                    3
+                )
+            )
+        )
+        wait(5f)
+    }
+
+    private fun EnemySpawner.wave1() {
+        repeat(LANE_COUNT) {
+            addEnemy(
+                listOf(
+                    SpawnConfiguration(
+                        Enemy().apply {
+                            moveStraight()
+                        },
+                        it
+                    ),
+                ),
+                if (it == 0) 0f else 0.5f
+            )
         }
+        wait(2f)
+        repeat(LANE_COUNT) {
+            addEnemy(
+                listOf(
+                    SpawnConfiguration(
+                        Enemy().apply {
+                            moveStraight()
+                        },
+                        8 - it
+                    ),
+                ),
+                if (it == 0) 0f else 0.5f
+            )
+        }
+        wait(2f)
+        addEnemy(
+            listOf(
+                SpawnConfiguration(moveStraightEnemy(), 2),
+                SpawnConfiguration(moveStraightEnemy(), 6),
+            )
+        )
+        addEnemy(
+            listOf(
+                SpawnConfiguration(moveStraightEnemy(), 3),
+                SpawnConfiguration(moveStraightEnemy(), 4),
+            ),
+            2f
+        )
+        addEnemy(
+            listOf(
+                SpawnConfiguration(moveStraightEnemy(), 5),
+                SpawnConfiguration(moveStraightEnemy(), 7),
+            ),
+            2f
+        )
     }
 
     override fun render(delta: Float) {

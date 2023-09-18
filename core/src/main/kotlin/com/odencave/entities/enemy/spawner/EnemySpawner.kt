@@ -16,11 +16,11 @@ class EnemySpawner : BaseActor() {
     private val enemySequenceAction = Actions.sequence()
 
     private fun getSpawnPositionForLane(lane: Int): Vector2 {
-        if (lane >= amountOfLanes || lane < 0 ) {
+        if (lane >= amountOfLanes || lane < 0) {
             Gdx.app.error("EnemySpawner", "Invalid lane value $lane")
         }
-        val spawnY = (-Globals.WORLD_HEIGHT/2) + (lane * distanceBetweenLanes)
-        val spawnX = Globals.WORLD_WIDTH/2
+        val spawnY = (-Globals.WORLD_HEIGHT / 2) + (lane * distanceBetweenLanes)
+        val spawnX = Globals.WORLD_WIDTH / 2
         return Vector2(spawnX, spawnY)
     }
 
@@ -48,6 +48,15 @@ class EnemySpawner : BaseActor() {
             val spawnPosition = getSpawnPositionForLane(config.lane)
             config.enemy.setPosition(spawnPosition.x, spawnPosition.y)
             crew?.addMember(config.enemy)
+        }
+    }
+
+    fun wave(i: Int, lambda: (() -> Unit)) {
+        if (i >= Globals.startAtWave) {
+            enemySequenceAction.addAction(Actions.run {
+                Gdx.app.log("WAVE", "Starting wave $i")
+            })
+            lambda.invoke()
         }
     }
 
