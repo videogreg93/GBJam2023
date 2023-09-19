@@ -282,10 +282,10 @@ open class BaseActor(texture: Texture? = null, x: Float = 0f, y: Float = 0f) : A
     fun addFlickerAction(flickerInterval: Float = 1f, repetitions: Int = RepeatAction.FOREVER): Float {
         alpha = 1f
         val hideAction = Actions.delay(flickerInterval, Actions.run {
-            alpha = 0f
+            shouldDraw = false
         })
         val showAction = Actions.delay(flickerInterval, Actions.run {
-            alpha = 1f
+            shouldDraw = true
         })
         val sequence = Actions.sequence(hideAction, showAction)
         val repeatAction = Actions.repeat(repetitions, sequence)

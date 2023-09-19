@@ -1,16 +1,17 @@
 package com.odencave.entities.player
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.SFX
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.EnemyBullet
 import gaia.Globals
-import gaia.actions.CameraShakeAction
 import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
@@ -23,6 +24,7 @@ class Player : Entity(playerTexture.get()) {
     var currentSpeed = DEFAULT_SPEED
     var canBeOutOfBounds = true
     var currentHealth = 3
+    var invincible = false
 
     fun stop() {
         xSpeed = 0
@@ -54,32 +56,33 @@ class Player : Entity(playerTexture.get()) {
     }
 
     override fun onCollision(other: Entity) {
-        if (other is Enemy) {
-            MegaManagers.screenManager.getCurrentScreen()?.shakeCamera(0.2f, 2f)
-            other.removeFromCrew()
-            if (!Globals.godMode) {
-                MegaManagers.soundManager.playSFXRandomPitch(SFX.playerHit.get())
-                val hitStunAction = FloatLerpAction.createLerpAction(
-                    0.7f, 1f, 1.5f, Interpolation.slowFast
-                ) {
-                    Globals.gameSpeed = it
+        when (other) {
+            is Enemy, is EnemyBullet -> {
+                if (!invincible) {
+                    handleHit(other)
                 }
-                MegaManagers.screenManager.addGlobalAction(hitStunAction)
-                currentHealth--
             }
-        } else if (other is EnemyBullet) {
-            MegaManagers.screenManager.getCurrentScreen()?.shakeCamera(0.2f, 2f)
-            other.removeFromCrew()
-            if (!Globals.godMode) {
-                MegaManagers.soundManager.playSFXRandomPitch(SFX.playerHit.get())
-                val hitStunAction = FloatLerpAction.createLerpAction(
-                    0.7f, 1f, 1.5f, Interpolation.slowFast
-                ) {
-                    Globals.gameSpeed = it
-                }
-                MegaManagers.screenManager.addGlobalAction(hitStunAction)
-                currentHealth--
+        }
+    }
+
+    private fun handleHit(other: Entity) {
+        MegaManagers.screenManager.getCurrentScreen()?.shakeCamera(0.2f, 2f)
+        other.removeFromCrew()
+        if (!Globals.godMode) {
+            val invincibilityDuration = addFlickerAction(0.05f, 6)
+            invincible = true
+            addAction(Actions.delay(invincibilityDuration, Actions.run {
+                invincible = false
+                Gdx.app.log("PLAYER", "No longer invincible.")
+            }))
+            MegaManagers.soundManager.playSFXRandomPitch(SFX.playerHit.get())
+            val hitStunAction = FloatLerpAction.createLerpAction(
+                0.7f, 1f, 1.5f, Interpolation.slowFast
+            ) {
+                Globals.gameSpeed = it
             }
+            MegaManagers.screenManager.addGlobalAction(hitStunAction)
+            currentHealth--
         }
     }
 

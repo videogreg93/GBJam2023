@@ -17,7 +17,6 @@ import com.odencave.i18n.entities.enemy.spawner.EnemySpawner.Companion.LANE_COUN
 import com.odencave.i18n.entities.enemy.spawner.SpawnConfiguration
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
-import com.odencave.i18n.models.Palette
 import com.odencave.ui.MapModal
 import gaia.Globals
 import gaia.managers.MegaManagers
@@ -28,19 +27,11 @@ import gaia.ui.utils.alignLeft
 import gaia.ui.utils.alignLeftToRightOf
 import gaia.ui.utils.alignTop
 import gaia.ui.utils.alignTopToBottomOf
-import gaia.utils.wrappingCursor
 
-// TODO add score and health/hearts to screen
+
 class MainScreen : BasicScreen("Main") {
 
     lateinit var player: Player
-
-    private var selectedPaletteIndex: Int = 0
-        set(value) {
-            field = Palette.allPalettes.wrappingCursor(value)
-        }
-    private val selectedPalette: Palette
-        get() = Palette.allPalettes[selectedPaletteIndex]
 
     // controls stuff
     var isUpPressed = false
@@ -250,7 +241,7 @@ class MainScreen : BasicScreen("Main") {
 
     override fun render(delta: Float) {
         super.render(delta)
-        val colors = selectedPalette.colorsSortedByLightness()
+        val colors = Globals.selectedPalette.colorsSortedByLightness()
         batch.shader.setUniformf("inputColor1", colors[0])
         batch.shader.setUniformf("inputColor2", colors[1])
         batch.shader.setUniformf("inputColor3", colors[2])
@@ -310,8 +301,8 @@ class MainScreen : BasicScreen("Main") {
             }
 
             ActionListener.InputAction.ZERO -> {
-                selectedPaletteIndex++
-                Globals.currentBackgroundColor = selectedPalette.color4
+                Globals.selectedPaletteIndex++
+                Globals.currentBackgroundColor = Globals.selectedPalette.color4
             }
 
             else -> return false

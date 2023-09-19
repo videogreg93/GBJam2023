@@ -8,30 +8,20 @@ import com.odencave.assets.Assets
 import com.odencave.entities.player.Player
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
-import com.odencave.i18n.models.Palette
 import com.odencave.i18n.screens.MainScreen
 import gaia.Globals
 import gaia.base.BaseActor
 import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
-import gaia.managers.fonts.FontManager
 import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
 import gaia.ui.generic.Label
 import gaia.ui.utils.*
-import gaia.utils.wrappingCursor
 import kotlin.math.min
 import kotlin.math.sin
 
-class TitleScreen(): BasicScreen("Title") {
-
-    private var selectedPaletteIndex: Int = 0
-        set(value) {
-            field = Palette.allPalettes.wrappingCursor(value)
-        }
-    private val selectedPalette: Palette
-        get() = Palette.allPalettes[selectedPaletteIndex]
+class TitleScreen() : BasicScreen("Title") {
 
     val titleLabel = Label("Zenith", MegaManagers.fontManager.titleFont)
     val pressStartLabel = Label("Press Start", MegaManagers.fontManager.titleFont, 200f, 200f)
@@ -65,9 +55,9 @@ class TitleScreen(): BasicScreen("Title") {
             lineRight.alignLeftToRightOf(titleLabel, 10f)
         }
         letterboxTop.center()
-        letterboxTop.y = Globals.WORLD_HEIGHT/2f
+        letterboxTop.y = Globals.WORLD_HEIGHT / 2f
         letterboxBottom.center()
-        letterboxBottom.y = -Globals.WORLD_HEIGHT/2f - letterboxBottom.height
+        letterboxBottom.y = -Globals.WORLD_HEIGHT / 2f - letterboxBottom.height
 
         pressStartLabel.addAction(
             Actions.forever(
@@ -109,23 +99,24 @@ class TitleScreen(): BasicScreen("Title") {
 
     override fun render(delta: Float) {
         super.render(delta)
-        val colors = selectedPalette.colorsSortedByLightness()
+        val colors = Globals.selectedPalette.colorsSortedByLightness()
         batch.shader.setUniformf("inputColor1", colors[0])
         batch.shader.setUniformf("inputColor2", colors[1])
         batch.shader.setUniformf("inputColor3", colors[2])
         batch.shader.setUniformf("inputColor4", colors[3])
         deltaAcc += delta
         fakePlayer.x += 8 * delta
-        fakePlayer.x = min(fakePlayer.x, -fakePlayer.width/2f)
+        fakePlayer.x = min(fakePlayer.x, -fakePlayer.width / 2f)
         fakePlayer.y = middlePlayerY + sin(deltaAcc * 3) * 12f
     }
 
     override fun onAction(action: ActionListener.InputAction): Boolean {
         when (action) {
             ActionListener.InputAction.ZERO -> {
-                selectedPaletteIndex++
-                Globals.currentBackgroundColor = selectedPalette.color4
+                Globals.selectedPaletteIndex++
+                Globals.currentBackgroundColor = Globals.selectedPalette.color4
             }
+
             else -> {
                 if (canContinue) {
                     MegaManagers.screenManager.changeScreen(MainScreen())
