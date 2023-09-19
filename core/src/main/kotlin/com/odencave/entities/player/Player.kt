@@ -8,6 +8,7 @@ import com.odencave.SFX
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
 import com.odencave.entities.enemy.Enemy
+import com.odencave.entities.enemy.EnemyBullet
 import gaia.Globals
 import gaia.actions.CameraShakeAction
 import gaia.managers.MegaManagers
@@ -66,6 +67,19 @@ class Player : Entity(playerTexture.get()) {
                 MegaManagers.screenManager.addGlobalAction(hitStunAction)
                 currentHealth--
             }
+        } else if (other is EnemyBullet) {
+            MegaManagers.screenManager.getCurrentScreen()?.shakeCamera(0.2f, 2f)
+            other.removeFromCrew()
+            if (!Globals.godMode) {
+                MegaManagers.soundManager.playSFXRandomPitch(SFX.playerHit.get())
+                val hitStunAction = FloatLerpAction.createLerpAction(
+                    0.7f, 1f, 1.5f, Interpolation.slowFast
+                ) {
+                    Globals.gameSpeed = it
+                }
+                MegaManagers.screenManager.addGlobalAction(hitStunAction)
+                currentHealth--
+            }
         }
     }
 
@@ -88,6 +102,6 @@ class Player : Entity(playerTexture.get()) {
         private const val DEFAULT_SPEED = 44
 
         @Asset
-        private val playerTexture = AssetDescriptor(Assets.Player.player, Texture::class.java)
+        val playerTexture = AssetDescriptor(Assets.Player.player, Texture::class.java)
     }
 }

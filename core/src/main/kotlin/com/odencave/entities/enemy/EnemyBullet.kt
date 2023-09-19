@@ -10,7 +10,7 @@ import gaia.base.Crew
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 
-class EnemyBullet(val direction: Vector2): Entity(bulletAsset.get()) {
+class EnemyBullet(val direction: Vector2) : Entity(bulletAsset.get()) {
 
     override fun act(delta: Float) {
         super.act(delta)

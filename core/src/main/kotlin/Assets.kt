@@ -5,14 +5,16 @@ object Assets {
 
 
     object Backgrounds {
-const val one = "backgrounds/one.png"}
+const val one = "backgrounds/one.png"
+const val title = "backgrounds/title.png"}
 const val border = "border.png"
     object Enemy {
 const val bullet = "enemy/bullet.png"
 const val john = "enemy/john.png"
 const val sandy = "enemy/sandy.png"}
     object Fonts {
-const val font1 = "fonts/font1.otf"}
+const val font1 = "fonts/font1.otf"
+const val font1Bold = "fonts/font1Bold.otf"}
 const val head = "head.png"
     object I18n {}
 const val mapBackground = "mapBackground.png"
@@ -33,6 +35,9 @@ const val bullet1_ogg_sound = "sounds/bullet1.ogg"
 const val bullet2_ogg_sound = "sounds/bullet2.ogg"
 const val enemyHit_ogg_sound = "sounds/enemyHit.ogg"
 const val playerHit_ogg_sound = "sounds/playerHit.ogg"}
+    object Title {
+const val letterbox = "title/letterbox.png"
+const val line = "title/line.png"}
     object World {
 const val boss = "world/boss.png"
 const val tinyShip = "world/tinyShip.png"
