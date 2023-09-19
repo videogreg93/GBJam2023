@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.viewport.FitViewport
+import com.odencave.ScoreManager
 import com.odencave.i18n.screens.LoadingScreen
 import com.odencave.i18n.screens.MainScreen
 import gaia.Globals
@@ -109,6 +110,8 @@ class MainApplication : KtxGame<BasicScreen>(),
     override fun create() {
         super.create()
         managers.init(emptyArray())
+        // Game specific managers
+        managers.registerManager(ScoreManager())
         overlayCrew = Crew(MegaManagers.currentContext.inject(), overlayCamera)
         KtxAsync.initiate()
         MegaManagers.screenManager.screenListener = this

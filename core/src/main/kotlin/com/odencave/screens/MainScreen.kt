@@ -12,21 +12,20 @@ import com.odencave.entities.enemy.SandyEnemy
 import com.odencave.entities.player.HealthIndicator
 import com.odencave.entities.player.Player
 import com.odencave.entities.player.PlayerBullet
+import com.odencave.entities.player.ScoreBar
 import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
 import com.odencave.i18n.entities.enemy.spawner.EnemySpawner.Companion.LANE_COUNT
 import com.odencave.i18n.entities.enemy.spawner.SpawnConfiguration
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
+import com.odencave.models.ShipUpgrade
 import com.odencave.ui.MapModal
 import gaia.Globals
 import gaia.managers.MegaManagers
 import gaia.managers.assets.AssetManager.Companion.get
 import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
-import gaia.ui.utils.alignLeft
-import gaia.ui.utils.alignLeftToRightOf
-import gaia.ui.utils.alignTop
-import gaia.ui.utils.alignTopToBottomOf
+import gaia.ui.utils.*
 
 
 class MainScreen : BasicScreen("Main") {
@@ -106,7 +105,7 @@ class MainScreen : BasicScreen("Main") {
             crew.addMember(player)
             spawner.start()
         }
-        val scoreHandler = ScoreHandler().apply {
+        val scoreHandler = ScoreBar().apply {
             alignTop(-2f)
             alignLeft(8f)
         }
@@ -273,16 +272,12 @@ class MainScreen : BasicScreen("Main") {
 
             ActionListener.InputAction.SHOOT -> {
                 if (shootDebouncerReady) {
-                    val bullet = PlayerBullet().apply {
-                        centerOn(player)
-                        alignLeftToRightOf(player, 1f)
+                    when (player.shipUpgrade) {
+                        ShipUpgrade.Upgrade1 -> shootUpgrade1()
+                        ShipUpgrade.Upgrade2 -> shootUpgrade2()
+                        ShipUpgrade.Upgrade3 -> shootNoUpgrade()
+                        null -> shootNoUpgrade()
                     }
-                    crew.addMember(bullet)
-                    shootDebouncerReady = false
-                    MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get())
-                    MegaManagers.screenManager.addGlobalAction(Actions.delay(0.3f, Actions.run {
-                        shootDebouncerReady = true
-                    }))
                 }
             }
 
@@ -308,6 +303,59 @@ class MainScreen : BasicScreen("Main") {
             else -> return false
         }
         return true
+    }
+
+    private fun shootNoUpgrade() {
+        val bullet = PlayerBullet().apply {
+            centerOn(player)
+            alignLeftToRightOf(player, 1f)
+        }
+        crew.addMember(bullet)
+        shootDebouncerReady = false
+        MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get())
+        MegaManagers.screenManager.addGlobalAction(Actions.delay(0.3f, Actions.run {
+            shootDebouncerReady = true
+        }))
+    }
+
+    private fun shootUpgrade1() {
+        val bullet1 = PlayerBullet().apply {
+            centerOn(player)
+            alignBottomToTopOf(player)
+            alignLeftToRightOf(player, 1f)
+        }
+        val bullet2 = PlayerBullet().apply {
+            centerOn(player)
+            alignTopToBottomOf(player)
+            alignLeftToRightOf(player, 1f)
+        }
+        crew.addMembers(bullet1, bullet2)
+        shootDebouncerReady = false
+        MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get())
+        MegaManagers.screenManager.addGlobalAction(Actions.delay(0.3f, Actions.run {
+            shootDebouncerReady = true
+        }))
+    }
+
+    private fun shootUpgrade2() {
+        val bullet1 = PlayerBullet().apply {
+            centerOn(player)
+            alignBottomToTopOf(player)
+        }
+        val bullet2 = PlayerBullet().apply {
+            centerOn(player)
+            alignTopToBottomOf(player)
+        }
+        val bullet3 = PlayerBullet().apply {
+            centerOn(player)
+            alignLeftToRightOf(player, 1f)
+        }
+        crew.addMembers(bullet1, bullet2, bullet3)
+        shootDebouncerReady = false
+        MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get())
+        MegaManagers.screenManager.addGlobalAction(Actions.delay(0.3f, Actions.run {
+            shootDebouncerReady = true
+        }))
     }
 
     override fun onActionReleased(action: ActionListener.InputAction): Boolean {

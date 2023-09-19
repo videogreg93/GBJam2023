@@ -7,6 +7,7 @@ import gaia.managers.fonts.FontManager
 import gaia.managers.input.InputActionManager
 import gaia.managers.prefs.Prefs
 import ktx.inject.Context
+import kotlin.reflect.KClass
 
 object MegaManagers {
     val randomManager: RandomManager = RandomManager()
@@ -21,6 +22,8 @@ object MegaManagers {
     val textBoy = TextBoy()
     lateinit var currentContext: Context
 
+    val gameSpecificManagers: HashMap<KClass<*>, Any> = HashMap()
+
     fun init(args: Array<String>) {
         MainContext.register()
         currentContext = MainContext.context
@@ -31,6 +34,15 @@ object MegaManagers {
         soundManager.init()
         textBoy.init()
         Shaders.initShaders()
+    }
+
+    fun registerManager(manager: Manager) {
+        manager.init()
+        gameSpecificManagers[manager::class as KClass<Manager>] = manager
+    }
+
+    inline fun <reified T : Manager> getManager(): T {
+        return gameSpecificManagers[T::class] as T
     }
 
     fun dispose() {

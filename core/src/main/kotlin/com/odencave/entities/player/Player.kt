@@ -3,14 +3,17 @@ package com.odencave.entities.player
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.SFX
+import com.odencave.ScoreManager
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.EnemyBullet
+import com.odencave.models.ShipUpgrade
 import gaia.Globals
 import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
@@ -18,13 +21,14 @@ import gaia.managers.assets.AssetManager.Companion.get
 import gaia.utils.FloatLerpAction
 import kotlin.math.abs
 
-class Player : Entity(playerTexture.get()) {
+class Player : Entity(playerSmallTexture.get()) {
     var xSpeed = 0
     var ySpeed = 0
     var currentSpeed = DEFAULT_SPEED
     var canBeOutOfBounds = true
     var currentHealth = 3
     var invincible = false
+    var shipUpgrade: ShipUpgrade? = null
 
     fun stop() {
         xSpeed = 0
@@ -69,6 +73,7 @@ class Player : Entity(playerTexture.get()) {
         MegaManagers.screenManager.getCurrentScreen()?.shakeCamera(0.2f, 2f)
         other.removeFromCrew()
         if (!Globals.godMode) {
+            MegaManagers.getManager<ScoreManager>().downgrade()
             val invincibilityDuration = addFlickerAction(0.05f, 6)
             invincible = true
             addAction(Actions.delay(invincibilityDuration, Actions.run {
@@ -88,7 +93,7 @@ class Player : Entity(playerTexture.get()) {
 
     override fun act(delta: Float) {
         super.act(delta)
-        val previousPosition = Vector2(x,y)
+        val previousPosition = Vector2(x, y)
         val speedVector = Vector2(xSpeed.toFloat(), ySpeed.toFloat()).nor()
         x += (xSpeed * abs(speedVector.x)) * delta
         if (!canBeOutOfBounds && isPartlyOutOfBounds()) {
@@ -100,11 +105,45 @@ class Player : Entity(playerTexture.get()) {
         }
     }
 
+    fun upgradeShip(upgrade: ShipUpgrade) {
+        shipUpgrade = upgrade
+        val oldSprite = Sprite(sprite)
+        Gdx.app.log("PLAYER", "Upgraded ship!")
+        val flickDelay = 0.05f
+        addAction(
+            Actions.sequence(
+                Actions.repeat(6, Actions.sequence(
+                    Actions.run {
+                        sprite = Sprite(upgrade.texture.get())
+                    },
+                    Actions.delay(flickDelay),
+                    Actions.run {
+                        sprite = oldSprite
+                    },
+                    Actions.delay(flickDelay)
+                )),
+                Actions.run {
+                    sprite = Sprite(upgrade.texture.get())
+                }
+            )
+        )
+    }
+
+    fun downgradeShip(upgrade: ShipUpgrade?) {
+        shipUpgrade = upgrade
+        Gdx.app.log("PLAYER", "Downgraded ship :(")
+        sprite = Sprite(upgrade?.texture?.get() ?: playerSmallTexture.get())
+        // todo change texture
+    }
+
 
     companion object {
         private const val DEFAULT_SPEED = 44
 
         @Asset
         val playerTexture = AssetDescriptor(Assets.Player.player, Texture::class.java)
+
+        @Asset
+        val playerSmallTexture = AssetDescriptor(Assets.Player.playerSmall, Texture::class.java)
     }
 }

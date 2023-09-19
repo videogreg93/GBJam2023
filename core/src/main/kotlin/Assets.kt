@@ -22,7 +22,10 @@ const val paletteTest = "paletteTest.png"
     object Player {
 const val bullet = "player/bullet.png"
 const val heart = "player/heart.png"
-const val player = "player/player.png"}
+const val player = "player/player.png"
+const val playerSmall = "player/playerSmall.png"
+const val scoreBarFill = "player/scoreBarFill.png"
+const val scoreBarFrame = "player/scoreBarFrame.png"}
     object Shaders {
 const val close = "shaders/close.png"
 const val cone = "shaders/cone.png"
