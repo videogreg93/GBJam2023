@@ -3,8 +3,10 @@ package com.odencave.entities.player
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.graphics.Texture
+import com.odencave.SFX
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
+import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 
@@ -22,6 +24,7 @@ class PlayerBullet : Entity(bulletAsset.get()) {
 
     override fun onCollision(other: Entity) {
         if (other is com.odencave.entities.enemy.Enemy) {
+            MegaManagers.soundManager.playSFXRandomPitch(SFX.enemyHit.get())
             other.destroy()
             removeFromCrew()
             Gdx.app.log("PlayerBullet", "Killed Enemy!!!")

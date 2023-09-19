@@ -3,6 +3,7 @@ package com.odencave.i18n.screens
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.odencave.SFX
 import com.odencave.entities.Entity
 import com.odencave.entities.ScoreHandler
 import com.odencave.entities.enemy.Enemy
@@ -20,6 +21,7 @@ import com.odencave.i18n.models.Palette
 import com.odencave.ui.MapModal
 import gaia.Globals
 import gaia.managers.MegaManagers
+import gaia.managers.assets.AssetManager.Companion.get
 import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
 import gaia.ui.utils.alignLeft
@@ -61,51 +63,58 @@ class MainScreen : BasicScreen("Main") {
         backgroundCrew.addMember(BackgroundGrid())
 
         // intro sequence
-        val safeCrew = crew
-        val map = MapModal().apply {
-            center()
-            alignTop()
-            y += Globals.WORLD_HEIGHT / 2
-            addAction(
+        if (!Globals.skipIntro) {
+            val safeCrew = crew
+            val map = MapModal().apply {
+                center()
+                alignTop()
+                y += Globals.WORLD_HEIGHT / 2
+                addAction(
+                    Actions.sequence(
+                        Actions.moveBy(0f, -Globals.WORLD_HEIGHT / 2, 2.5f, Interpolation.fastSlow),
+                        Actions.run {
+                            showShipCursor()
+                        },
+                        Actions.delay(3f),
+                        Actions.run {
+                            hideShipCursor()
+                            safeCrew.addMember(player)
+                        },
+                        Actions.moveBy(0f, Globals.WORLD_HEIGHT / 2, 2f, Interpolation.slowFast),
+                        Actions.run {
+                            removeFromCrew()
+                        }
+                    )
+                )
+            }
+            crew.addMember(map)
+            player.addAction(
                 Actions.sequence(
-                    Actions.moveBy(0f, -Globals.WORLD_HEIGHT / 2, 2.5f, Interpolation.fastSlow),
                     Actions.run {
-                        showShipCursor()
+                        MegaManagers.inputActionManager.disableAllInputs()
+                        player.shouldDraw = true
                     },
-                    Actions.delay(3f),
+                    Actions.moveBy(50f, 0f, 2.2f, Interpolation.fastSlow),
+                    Actions.delay(0.2f),
                     Actions.run {
-                        hideShipCursor()
-                        safeCrew.addMember(player)
+                        MegaManagers.inputActionManager.enableAllInputs()
+                        player.canBeOutOfBounds = false
                     },
-                    Actions.moveBy(0f, Globals.WORLD_HEIGHT / 2, 2f, Interpolation.slowFast),
+                    Actions.delay(5f),
                     Actions.run {
-                        removeFromCrew()
+                        // this is when the game actually starts
+                        spawner.start()
                     }
                 )
             )
+        } else {
+            // dev intro skipped
+            player.shouldDraw = true
+            player.x += 50f
+            player.canBeOutOfBounds = false
+            crew.addMember(player)
+            spawner.start()
         }
-        crew.addMember(map)
-
-
-        player.addAction(
-            Actions.sequence(
-                Actions.run {
-                    MegaManagers.inputActionManager.disableAllInputs()
-                    player.shouldDraw = true
-                },
-                Actions.moveBy(50f, 0f, 2.2f, Interpolation.fastSlow),
-                Actions.delay(0.2f),
-                Actions.run {
-                    MegaManagers.inputActionManager.enableAllInputs()
-                    player.canBeOutOfBounds = false
-                },
-                Actions.delay(5f),
-                Actions.run {
-                    // this is when the game actually starts
-                    spawner.start()
-                }
-            )
-        )
         val scoreHandler = ScoreHandler().apply {
             alignTop(-2f)
             alignLeft(8f)
@@ -279,6 +288,7 @@ class MainScreen : BasicScreen("Main") {
                     }
                     crew.addMember(bullet)
                     shootDebouncerReady = false
+                    MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get())
                     MegaManagers.screenManager.addGlobalAction(Actions.delay(0.3f, Actions.run {
                         shootDebouncerReady = true
                     }))

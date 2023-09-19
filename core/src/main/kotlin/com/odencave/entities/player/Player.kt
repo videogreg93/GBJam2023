@@ -2,7 +2,9 @@ package com.odencave.entities.player
 
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
+import com.odencave.SFX
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
 import com.odencave.entities.enemy.Enemy
@@ -11,6 +13,7 @@ import gaia.actions.CameraShakeAction
 import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
+import gaia.utils.FloatLerpAction
 import kotlin.math.abs
 
 class Player : Entity(playerTexture.get()) {
@@ -54,6 +57,13 @@ class Player : Entity(playerTexture.get()) {
             MegaManagers.screenManager.getCurrentScreen()?.shakeCamera(0.2f, 2f)
             other.removeFromCrew()
             if (!Globals.godMode) {
+                MegaManagers.soundManager.playSFXRandomPitch(SFX.playerHit.get())
+                val hitStunAction = FloatLerpAction.createLerpAction(
+                    0.7f, 1f, 1.5f, Interpolation.slowFast
+                ) {
+                    Globals.gameSpeed = it
+                }
+                MegaManagers.screenManager.addGlobalAction(hitStunAction)
                 currentHealth--
             }
         }

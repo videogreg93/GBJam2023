@@ -104,8 +104,8 @@ class SoundManager {
         }
     }
 
-    fun play(sound: Sound, channel: CHANNEL = CHANNEL.OTHER, volumeModifier: Float = 0f): Long {
-        return sound.play(channel.volume + volumeModifier)
+    fun play(sound: Sound, channel: CHANNEL = CHANNEL.OTHER, volumeModifier: Float = 0f, pitch: Float = 1f): Long {
+        return sound.play(channel.volume + volumeModifier, pitch, 0f)
     }
 
     fun playRandomSFX(vararg sounds: Sound): Long {
@@ -114,6 +114,11 @@ class SoundManager {
 
     fun playSFX(sound: Sound, volumeModifier: Float = 0f): Long {
         return play(sound, CHANNEL.SFX, volumeModifier)
+    }
+
+    fun playSFXRandomPitch(sound: Sound, volumeModifier: Float = 0f): Long {
+        val pitch = listOf(0.8f, 0.9f, 1f, 1.1f, 1.2f).random()
+        return play(sound, CHANNEL.SFX, volumeModifier, pitch)
     }
 
     fun stopSFX(sound: Sound, id: Long? = null) {

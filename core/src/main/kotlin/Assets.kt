@@ -29,7 +29,9 @@ const val leftToRight = "shaders/leftToRight.png"
 const val leftToRight2 = "shaders/leftToRight2.png"
 const val out = "shaders/out.png"}
     object Sounds {
-const val bullet_ogg_sound = "sounds/bullet.ogg"
+const val bullet1_ogg_sound = "sounds/bullet1.ogg"
+const val bullet2_ogg_sound = "sounds/bullet2.ogg"
+const val enemyHit_ogg_sound = "sounds/enemyHit.ogg"
 const val playerHit_ogg_sound = "sounds/playerHit.ogg"}
     object World {
 const val boss = "world/boss.png"
