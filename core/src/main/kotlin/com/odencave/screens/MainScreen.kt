@@ -132,7 +132,51 @@ class MainScreen : BasicScreen("Main") {
             wave(3) {
                 wave3()
             }
+            wave(4) {
+                // Straight enemies + shooters
+                wave4()
+            }
         }
+    }
+
+    private fun EnemySpawner.wave4() {
+        repeat(4) {
+            val enemy = moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED).apply {
+                moveUpALane()
+            }
+            addEnemy(listOf(SpawnConfiguration(enemy, 2)), 0.5f)
+        }
+        wait(1f)
+        repeat(4) {
+            val enemy = moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED).apply {
+                moveDownALane()
+            }
+            addEnemy(listOf(SpawnConfiguration(enemy, 5)), 0.5f)
+        }
+        val actions1 = (0..5).flatMap {
+            listOf(Actions.delay(0.5f, addEnemyAction(SpawnConfiguration(moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED), 1))))
+        }
+        val actions2 = listOf(
+            Actions.delay(1f),
+            addEnemyAction(SpawnConfiguration(SandyEnemy(), 7))
+        ) + (0..5).flatMap {
+            listOf(Actions.delay(0.5f, addEnemyAction(SpawnConfiguration(moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED), 6))))
+        }
+        val actions3 = listOf(
+            Actions.delay(2f),
+            addEnemyAction(SpawnConfiguration(SandyEnemy(), 3)),
+            Actions.delay(1f),
+            addEnemyAction(SpawnConfiguration(SandyEnemy(), 5)),
+            Actions.delay(1f, addEnemyAction(SpawnConfiguration(SandyEnemy(), 1))),
+            Actions.delay(1f, addEnemyAction(SpawnConfiguration(SandyEnemy(), 4)))
+        )
+        addActionToSequence(
+            Actions.parallel(
+                Actions.sequence(*actions1.toTypedArray()),
+                Actions.sequence(*actions2.toTypedArray()),
+                Actions.sequence(*actions3.toTypedArray()),
+            )
+        )
     }
 
     private fun EnemySpawner.wave3() {
@@ -143,9 +187,6 @@ class MainScreen : BasicScreen("Main") {
         val lane2Actions = listOf(Actions.delay(1f)) + (0..5).flatMap {
             listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 2)))
         }
-        val lane3Actions = listOf(Actions.delay(3f)) + (0..5).flatMap {
-            listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 4)))
-        }
         val lane4Actions = listOf(Actions.delay(2f)) + (0..5).flatMap {
             listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 6)))
         }
@@ -153,7 +194,6 @@ class MainScreen : BasicScreen("Main") {
             Actions.parallel(
                 Actions.sequence(*lane1Actions.toTypedArray()),
                 Actions.sequence(*lane2Actions.toTypedArray()),
-                Actions.sequence(*lane3Actions.toTypedArray()),
                 Actions.sequence(*lane4Actions.toTypedArray()),
             )
         )

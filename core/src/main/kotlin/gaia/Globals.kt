@@ -16,8 +16,8 @@ object Globals {
         get() = Palette.allPalettes[selectedPaletteIndex]
     var gameSpeed = 1f
     var godMode = false
-    var startAtWave: Int = 1
-    var skipIntro: Boolean = false
+    var startAtWave: Int = 4
+    var skipIntro: Boolean = true
 
     var world2Unlocked = false
     var world3Unlocked = false
