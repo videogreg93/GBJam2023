@@ -9,6 +9,7 @@ import com.odencave.SFX
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
 import com.odencave.entities.enemy.Enemy
+import com.odencave.entities.enemy.Enemy.Companion.FASTER_ENEMY_MOVE_SPEED
 import com.odencave.entities.enemy.Enemy.Companion.moveStraightEnemy
 import com.odencave.entities.enemy.SandyEnemy
 import com.odencave.entities.player.HealthIndicator
@@ -133,9 +134,24 @@ class MainScreen : BasicScreen("Main") {
                 wave3()
             }
             wave(4) {
-                // Straight enemies + shooters
                 wave4()
             }
+        }
+    }
+
+    private fun EnemySpawner.wave4Part2() {
+        val bottomLane = (0..5).flatMap {
+            listOf(
+                Actions.delay(0.5f, addEnemyAction(SpawnConfiguration(moveStraightEnemy(FASTER_ENEMY_MOVE_SPEED).apply {
+                    moveLanes(2f, 2)
+                }, 4))))
+        }
+        val topLane = listOf(Actions.delay(3f)) + (0..5).flatMap {
+            listOf(
+                Actions.delay(0.5f, addEnemyAction(SpawnConfiguration(moveStraightEnemy(FASTER_ENEMY_MOVE_SPEED).apply {
+                    moveLanes(2f, -2)
+                }, 5))))
+            )
         }
     }
 
@@ -177,6 +193,8 @@ class MainScreen : BasicScreen("Main") {
                 Actions.sequence(*actions3.toTypedArray()),
             )
         )
+        wait(1f)
+
     }
 
     private fun EnemySpawner.wave3() {

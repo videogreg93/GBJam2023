@@ -15,16 +15,19 @@ import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.EnemyBullet
 import com.odencave.models.ShipUpgrade
 import gaia.Globals
+import gaia.base.Crew
 import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 import gaia.utils.FloatLerpAction
+import gaia.utils.IntProperty
 import kotlin.math.abs
 
 class Player : Entity(playerSmallTexture.get()) {
     var xSpeed = 0
     var ySpeed = 0
-    var currentSpeed = DEFAULT_SPEED
+    val currentSpeed
+        get() = DEFAULT_SPEED
     var canBeOutOfBounds = true
     var currentHealth = 3
     var invincible = false
@@ -57,6 +60,10 @@ class Player : Entity(playerSmallTexture.get()) {
 
     fun moveLeft() {
         xSpeed = -currentSpeed
+    }
+
+    override fun onAddedToCrew(crew: Crew) {
+        super.onAddedToCrew(crew)
     }
 
     override fun onCollision(other: Entity) {
@@ -139,7 +146,7 @@ class Player : Entity(playerSmallTexture.get()) {
 
 
     companion object {
-        private const val DEFAULT_SPEED = 44
+        private val DEFAULT_SPEED = 44
 
         @Asset
         val playerTexture = AssetDescriptor(Assets.Player.player, Texture::class.java)

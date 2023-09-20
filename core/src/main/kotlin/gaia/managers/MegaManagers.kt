@@ -34,6 +34,7 @@ object MegaManagers {
         soundManager.init()
         textBoy.init()
         Shaders.initShaders()
+        prefs.folder
     }
 
     fun registerManager(manager: Manager) {
