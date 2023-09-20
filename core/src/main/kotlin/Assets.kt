@@ -37,7 +37,8 @@ const val out = "shaders/out.png"}
 const val bullet1_ogg_sound = "sounds/bullet1.ogg"
 const val bullet2_ogg_sound = "sounds/bullet2.ogg"
 const val enemyHit_ogg_sound = "sounds/enemyHit.ogg"
-const val playerHit_ogg_sound = "sounds/playerHit.ogg"}
+const val playerHit_ogg_sound = "sounds/playerHit.ogg"
+const val upgrade_ogg_sound = "sounds/upgrade.ogg"}
     object Title {
 const val letterbox = "title/letterbox.png"
 const val line = "title/line.png"}
@@ -48,4 +49,6 @@ const val world1 = "world/world1.png"
 const val world2 = "world/world2.png"
 const val world3 = "world/world3.png"
 const val worldLocked = "world/worldLocked.png"}
+const val ZenithGameTheme_ogg_sound = "ZenithGameTheme.ogg"
+const val ZenithGameThemeIntro_ogg_sound = "ZenithGameThemeIntro.ogg"
 }

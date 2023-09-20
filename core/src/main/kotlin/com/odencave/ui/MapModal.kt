@@ -19,7 +19,7 @@ class MapModal(val selectedWorldIndex: Int = 0): BaseActor(background.get()) {
     private val world4 = BaseActor(if (Globals.world4Unlocked) finalWorldAsset.get() else worldLocked.get())
     private val allWorlds = listOf(world1, world2, world3, world4)
 
-    private val shipCursor = BaseActor(shipCursorAsset.get()).apply {
+    private val shipCursor = BaseActor(shipCursorAsset.get(), 1000f, 1000f).apply {
         drawIndex = -2000
     }
 

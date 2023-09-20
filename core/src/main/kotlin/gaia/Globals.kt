@@ -17,7 +17,7 @@ object Globals {
     var gameSpeed = 1f
     var godMode = false
     var startAtWave: Int = 1
-    var skipIntro: Boolean = true
+    var skipIntro: Boolean = false
 
     var world2Unlocked = false
     var world3Unlocked = false

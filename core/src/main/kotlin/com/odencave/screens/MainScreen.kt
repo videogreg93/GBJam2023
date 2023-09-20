@@ -1,11 +1,13 @@
 package com.odencave.i18n.screens
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.assets.AssetDescriptor
+import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.SFX
+import com.odencave.assets.Assets
 import com.odencave.entities.Entity
-import com.odencave.entities.ScoreHandler
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.Enemy.Companion.moveStraightEnemy
 import com.odencave.entities.enemy.SandyEnemy
@@ -22,6 +24,7 @@ import com.odencave.models.ShipUpgrade
 import com.odencave.ui.MapModal
 import gaia.Globals
 import gaia.managers.MegaManagers
+import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
@@ -69,6 +72,7 @@ class MainScreen : BasicScreen("Main") {
                         Actions.run {
                             hideShipCursor()
                             safeCrew.addMember(player)
+                            MegaManagers.soundManager.playMusicWithIntro(BGM.get(), BGMIntro.get(), true)
                         },
                         Actions.moveBy(0f, Globals.WORLD_HEIGHT / 2, 2f, Interpolation.slowFast),
                         Actions.run {
@@ -90,7 +94,7 @@ class MainScreen : BasicScreen("Main") {
                         MegaManagers.inputActionManager.enableAllInputs()
                         player.canBeOutOfBounds = false
                     },
-                    Actions.delay(5f),
+                    Actions.delay(4f),
                     Actions.run {
                         // this is when the game actually starts
                         spawner.start()
@@ -312,7 +316,7 @@ class MainScreen : BasicScreen("Main") {
         }
         crew.addMember(bullet)
         shootDebouncerReady = false
-        MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get())
+        MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get(), -0.1f)
         MegaManagers.screenManager.addGlobalAction(Actions.delay(0.3f, Actions.run {
             shootDebouncerReady = true
         }))
@@ -331,7 +335,7 @@ class MainScreen : BasicScreen("Main") {
         }
         crew.addMembers(bullet1, bullet2)
         shootDebouncerReady = false
-        MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get())
+        MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get(), -0.1f)
         MegaManagers.screenManager.addGlobalAction(Actions.delay(0.3f, Actions.run {
             shootDebouncerReady = true
         }))
@@ -352,7 +356,7 @@ class MainScreen : BasicScreen("Main") {
         }
         crew.addMembers(bullet1, bullet2, bullet3)
         shootDebouncerReady = false
-        MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get())
+        MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get(), -0.1f)
         MegaManagers.screenManager.addGlobalAction(Actions.delay(0.3f, Actions.run {
             shootDebouncerReady = true
         }))
@@ -422,5 +426,13 @@ class MainScreen : BasicScreen("Main") {
             (Globals.WORLD_WIDTH * multiplier).toInt(),
             (Globals.WORLD_HEIGHT * multiplier).toInt()
         )
+    }
+
+    companion object {
+        @Asset
+        val BGM = AssetDescriptor(Assets.ZenithGameTheme_ogg_sound, Music::class.java)
+
+        @Asset
+        val BGMIntro = AssetDescriptor(Assets.ZenithGameThemeIntro_ogg_sound, Music::class.java)
     }
 }

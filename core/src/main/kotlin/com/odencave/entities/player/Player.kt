@@ -110,6 +110,7 @@ class Player : Entity(playerSmallTexture.get()) {
         val oldSprite = Sprite(sprite)
         Gdx.app.log("PLAYER", "Upgraded ship!")
         val flickDelay = 0.05f
+        MegaManagers.soundManager.playSFX(SFX.playerUpgrade.get())
         addAction(
             Actions.sequence(
                 Actions.repeat(6, Actions.sequence(

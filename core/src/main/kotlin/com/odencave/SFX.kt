@@ -19,4 +19,7 @@ object SFX {
 
     @Asset
     val enemyHit = AssetDescriptor(Assets.Sounds.enemyHit_ogg_sound, Sound::class.java)
+
+    @Asset
+    val playerUpgrade = AssetDescriptor(Assets.Sounds.upgrade_ogg_sound, Sound::class.java)
 }
