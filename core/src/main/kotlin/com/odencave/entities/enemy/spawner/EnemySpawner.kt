@@ -5,8 +5,10 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.entities.enemy.Enemy
+import com.odencave.entities.enemy.spawner.EndLevelEvent
 import gaia.Globals
 import gaia.base.BaseActor
+import gaia.managers.MegaManagers
 import gaia.ui.utils.skip
 
 class EnemySpawner : BaseActor() {
@@ -61,6 +63,14 @@ class EnemySpawner : BaseActor() {
     }
 
     fun addActionToSequence(action: Action) = enemySequenceAction.addAction(action)
+
+    fun finishLevel() {
+        addActionToSequence(
+            Actions.run {
+                MegaManagers.eventManager.sendEvent(EndLevelEvent())
+            }
+        )
+    }
 
     fun addJohn(lane: Int, delay: Float = 0f) {
         addEnemy(

@@ -5,13 +5,15 @@ import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.utils.Align.center
 import com.odencave.SFX
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
 import com.odencave.entities.enemy.Enemy
-import com.odencave.entities.enemy.Enemy.Companion.FASTER_ENEMY_MOVE_SPEED
+import com.odencave.entities.enemy.Enemy.Companion.DEFAULT_ENEMY_MOVE_SPEED
 import com.odencave.entities.enemy.Enemy.Companion.moveStraightEnemy
 import com.odencave.entities.enemy.SandyEnemy
+import com.odencave.entities.enemy.spawner.EndLevelEvent
 import com.odencave.entities.player.HealthIndicator
 import com.odencave.entities.player.Player
 import com.odencave.entities.player.PlayerBullet
@@ -27,14 +29,13 @@ import gaia.Globals
 import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
+import gaia.managers.events.EventListener
 import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
 import gaia.ui.utils.*
 
 
-class MainScreen : BasicScreen("Main") {
-
-    lateinit var player: Player
+class MainScreen(val player: Player = Player()) : BasicScreen("Main"), EventListener<EndLevelEvent> {
 
     // controls stuff
     var isUpPressed = false
@@ -45,13 +46,12 @@ class MainScreen : BasicScreen("Main") {
 
     override fun firstShown() {
         super.firstShown()
+        MegaManagers.eventManager.subscribeTo<EndLevelEvent>(this)
         batch.shader = Shaders.paletteShader
-        player = Player().apply {
-            center()
-            alignLeft(10f)
-            shouldDraw = false
-            x -= 30f
-        }
+        player.center()
+        player.alignLeft(10f)
+        player.shouldDraw = false
+        player.x -= 30f
         val spawner = getSpawner()
         crew.addMembers(spawner)
         backgroundCrew.addMember(BackgroundGrid())
@@ -122,6 +122,25 @@ class MainScreen : BasicScreen("Main") {
 
     }
 
+    override fun onEvent(event: EndLevelEvent) {
+        MegaManagers.inputActionManager.disableAllInputs()
+        val dest = player.calculatePositionFor {
+            center()
+        }
+        player.addAction(
+            Actions.sequence(
+                Actions.moveTo(dest.x, dest.y, 1f, Interpolation.fastSlow),
+                Actions.delay(2f),
+                Actions.moveBy(Globals.WORLD_WIDTH / 2f + 10f, 0f, 1.5f, Interpolation.fastSlow),
+                Actions.delay(1f),
+                Actions.run {
+                    MegaManagers.screenManager.changeScreen(MainScreen(player))
+                    MegaManagers.inputActionManager.enableAllInputs()
+                }
+            )
+        )
+    }
+
     private fun getSpawner(): EnemySpawner {
         return EnemySpawner().apply {
             wave(1) {
@@ -135,24 +154,40 @@ class MainScreen : BasicScreen("Main") {
             }
             wave(4) {
                 wave4()
+                wave4Part2()
             }
+            wait(5f)
+            finishLevel()
         }
     }
 
     private fun EnemySpawner.wave4Part2() {
-        val bottomLane = (0..5).flatMap {
-            listOf(
-                Actions.delay(0.5f, addEnemyAction(SpawnConfiguration(moveStraightEnemy(FASTER_ENEMY_MOVE_SPEED).apply {
-                    moveLanes(2f, 2)
-                }, 4))))
+        val bottomLane = (0..10).flatMap {
+            if (it % 2 == 0) {
+                listOf(
+                    Actions.delay(
+                        0.25f,
+                        addEnemyAction(SpawnConfiguration(moveStraightEnemy(DEFAULT_ENEMY_MOVE_SPEED).apply {
+                            moveLanes(1f, -1)
+                        }, 2))
+                    )
+                )
+            } else {
+                listOf(
+                    Actions.delay(
+                        0.25f,
+                        addEnemyAction(SpawnConfiguration(moveStraightEnemy(DEFAULT_ENEMY_MOVE_SPEED).apply {
+                            moveLanes(1f, 2)
+                        }, 1))
+                    )
+                )
+            }
         }
-        val topLane = listOf(Actions.delay(3f)) + (0..5).flatMap {
-            listOf(
-                Actions.delay(0.5f, addEnemyAction(SpawnConfiguration(moveStraightEnemy(FASTER_ENEMY_MOVE_SPEED).apply {
-                    moveLanes(2f, -2)
-                }, 5))))
+        addActionToSequence(
+            Actions.parallel(
+                Actions.sequence(*bottomLane.toTypedArray()),
             )
-        }
+        )
     }
 
     private fun EnemySpawner.wave4() {
@@ -170,13 +205,23 @@ class MainScreen : BasicScreen("Main") {
             addEnemy(listOf(SpawnConfiguration(enemy, 5)), 0.5f)
         }
         val actions1 = (0..5).flatMap {
-            listOf(Actions.delay(0.5f, addEnemyAction(SpawnConfiguration(moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED), 1))))
+            listOf(
+                Actions.delay(
+                    0.5f,
+                    addEnemyAction(SpawnConfiguration(moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED), 1))
+                )
+            )
         }
         val actions2 = listOf(
             Actions.delay(1f),
             addEnemyAction(SpawnConfiguration(SandyEnemy(), 7))
         ) + (0..5).flatMap {
-            listOf(Actions.delay(0.5f, addEnemyAction(SpawnConfiguration(moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED), 6))))
+            listOf(
+                Actions.delay(
+                    0.5f,
+                    addEnemyAction(SpawnConfiguration(moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED), 6))
+                )
+            )
         }
         val actions3 = listOf(
             Actions.delay(2f),
