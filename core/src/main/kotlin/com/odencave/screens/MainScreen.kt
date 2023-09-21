@@ -63,7 +63,13 @@ class MainScreen(val player: Player = Player()) : BasicScreen("Main"), EventList
         // intro sequence
         if (!Globals.skipIntro) {
             val safeCrew = crew
-            val map = MapModal().apply {
+            val selectedIndex = when {
+                Globals.world4Unlocked -> 3
+                Globals.world3Unlocked -> 2
+                Globals.world2Unlocked -> 1
+                else -> 0
+            }
+            val map = MapModal(selectedIndex).apply {
                 center()
                 alignTop()
                 y += Globals.WORLD_HEIGHT / 2
