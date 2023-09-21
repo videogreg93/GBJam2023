@@ -13,6 +13,7 @@ import com.odencave.assets.Assets
 import com.odencave.entities.Entity
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.EnemyBullet
+import com.odencave.events.PlayerDeathEvent
 import com.odencave.models.ShipUpgrade
 import gaia.Globals
 import gaia.base.Crew
@@ -29,7 +30,7 @@ class Player : Entity(playerSmallTexture.get()) {
     val currentSpeed
         get() = DEFAULT_SPEED
     var canBeOutOfBounds = true
-    var currentHealth = 3
+    var currentHealth = 2
     var invincible = false
     var shipUpgrade: ShipUpgrade? = null
 
@@ -95,6 +96,9 @@ class Player : Entity(playerSmallTexture.get()) {
             }
             MegaManagers.screenManager.addGlobalAction(hitStunAction)
             currentHealth--
+            if (currentHealth <= 0) {
+                MegaManagers.eventManager.sendEvent(PlayerDeathEvent(this))
+            }
         }
     }
 
@@ -142,6 +146,10 @@ class Player : Entity(playerSmallTexture.get()) {
         Gdx.app.log("PLAYER", "Downgraded ship :(")
         sprite = Sprite(upgrade?.texture?.get() ?: playerSmallTexture.get())
         // todo change texture
+    }
+
+    fun resetHealth() {
+        currentHealth = 2
     }
 
 

@@ -5,6 +5,7 @@ object Assets {
 
 
     object Backgrounds {
+const val deathScreen = "backgrounds/deathScreen.png"
 const val one = "backgrounds/one.png"
 const val title = "backgrounds/title.png"}
 const val border = "border.png"

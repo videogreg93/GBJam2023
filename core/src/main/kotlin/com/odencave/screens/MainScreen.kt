@@ -5,7 +5,6 @@ import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.badlogic.gdx.utils.Align.center
 import com.odencave.SFX
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
@@ -18,24 +17,28 @@ import com.odencave.entities.player.HealthIndicator
 import com.odencave.entities.player.Player
 import com.odencave.entities.player.PlayerBullet
 import com.odencave.entities.player.ScoreBar
+import com.odencave.events.PlayerDeathEvent
 import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
 import com.odencave.i18n.entities.enemy.spawner.EnemySpawner.Companion.LANE_COUNT
 import com.odencave.i18n.entities.enemy.spawner.SpawnConfiguration
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
 import com.odencave.models.ShipUpgrade
+import com.odencave.screens.DeathScreen
+import com.odencave.screens.GameOverScreen
 import com.odencave.ui.MapModal
 import gaia.Globals
 import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
+import gaia.managers.events.EventInstance
 import gaia.managers.events.EventListener
 import gaia.managers.input.ActionListener
 import gaia.ui.BasicScreen
 import gaia.ui.utils.*
 
 
-class MainScreen(val player: Player = Player()) : BasicScreen("Main"), EventListener<EndLevelEvent> {
+class MainScreen(val player: Player = Player()) : BasicScreen("Main"), EventListener<EventInstance> {
 
     // controls stuff
     var isUpPressed = false
@@ -47,6 +50,7 @@ class MainScreen(val player: Player = Player()) : BasicScreen("Main"), EventList
     override fun firstShown() {
         super.firstShown()
         MegaManagers.eventManager.subscribeTo<EndLevelEvent>(this)
+        MegaManagers.eventManager.subscribeTo<PlayerDeathEvent>(this)
         batch.shader = Shaders.paletteShader
         player.center()
         player.alignLeft(10f)
@@ -122,23 +126,37 @@ class MainScreen(val player: Player = Player()) : BasicScreen("Main"), EventList
 
     }
 
-    override fun onEvent(event: EndLevelEvent) {
-        MegaManagers.inputActionManager.disableAllInputs()
-        val dest = player.calculatePositionFor {
-            center()
-        }
-        player.addAction(
-            Actions.sequence(
-                Actions.moveTo(dest.x, dest.y, 1f, Interpolation.fastSlow),
-                Actions.delay(2f),
-                Actions.moveBy(Globals.WORLD_WIDTH / 2f + 10f, 0f, 1.5f, Interpolation.fastSlow),
-                Actions.delay(1f),
-                Actions.run {
-                    MegaManagers.screenManager.changeScreen(MainScreen(player))
-                    MegaManagers.inputActionManager.enableAllInputs()
+    override fun onEvent(event: EventInstance) {
+        when (event) {
+            is PlayerDeathEvent -> {
+                MegaManagers.soundManager.stopCurrentMusic()
+                player.removeFromCrew()
+                MegaManagers.screenManager.addGlobalAction(
+                    Actions.delay(2f, Actions.run {
+                        MegaManagers.screenManager.changeScreen(DeathScreen(player))
+                    })
+                )
+            }
+
+            is EndLevelEvent -> {
+                MegaManagers.inputActionManager.disableAllInputs()
+                val dest = player.calculatePositionFor {
+                    center()
                 }
-            )
-        )
+                player.addAction(
+                    Actions.sequence(
+                        Actions.moveTo(dest.x, dest.y, 1f, Interpolation.fastSlow),
+                        Actions.delay(2f),
+                        Actions.moveBy(Globals.WORLD_WIDTH / 2f + 10f, 0f, 1.5f, Interpolation.fastSlow),
+                        Actions.delay(1f),
+                        Actions.run {
+                            MegaManagers.screenManager.changeScreen(MainScreen(player))
+                            MegaManagers.inputActionManager.enableAllInputs()
+                        }
+                    )
+                )
+            }
+        }
     }
 
     private fun getSpawner(): EnemySpawner {
