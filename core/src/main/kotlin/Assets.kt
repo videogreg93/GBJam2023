@@ -52,4 +52,5 @@ const val world3 = "world/world3.png"
 const val worldLocked = "world/worldLocked.png"}
 const val ZenithGameTheme_ogg_sound = "ZenithGameTheme.ogg"
 const val ZenithGameThemeIntro_ogg_sound = "ZenithGameThemeIntro.ogg"
+const val ZenithTitleTheme_ogg_sound = "ZenithTitleTheme.ogg"
 }

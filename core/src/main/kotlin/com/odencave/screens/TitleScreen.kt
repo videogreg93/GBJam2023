@@ -1,6 +1,7 @@
 package com.odencave.screens
 
 import com.badlogic.gdx.assets.AssetDescriptor
+import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -77,6 +78,7 @@ class TitleScreen() : BasicScreen("Title") {
 
     override fun firstShown() {
         super.firstShown()
+        MegaManagers.soundManager.playMusic(titleSong.get(), true)
         batch.shader = Shaders.paletteShader
         letterboxTop.addAction(
             Actions.sequence(
@@ -119,6 +121,7 @@ class TitleScreen() : BasicScreen("Title") {
 
             else -> {
                 if (canContinue) {
+                    MegaManagers.soundManager.stopCurrentMusic()
                     MegaManagers.screenManager.changeScreen(MainScreen())
                 }
             }
@@ -135,5 +138,8 @@ class TitleScreen() : BasicScreen("Title") {
 
         @Asset
         private val backgroundAsset = AssetDescriptor(Assets.Backgrounds.title, Texture::class.java)
+
+        @Asset
+        private val titleSong = AssetDescriptor(Assets.ZenithTitleTheme_ogg_sound, Music::class.java)
     }
 }
