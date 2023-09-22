@@ -5,10 +5,11 @@ import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.SandyEnemy
 import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
 import com.odencave.i18n.entities.enemy.spawner.SpawnConfiguration
+import gaia.utils.toSequence
 
 object SpawnerLevels {
     fun World1(): EnemySpawner {
-         fun EnemySpawner.wave4Part2() {
+        fun EnemySpawner.wave4Part2() {
             val bottomLane = (0..10).flatMap {
                 if (it % 2 == 0) {
                     listOf(
@@ -37,7 +38,7 @@ object SpawnerLevels {
             )
         }
 
-         fun EnemySpawner.wave4() {
+        fun EnemySpawner.wave4() {
             repeat(4) {
                 val enemy = Enemy.moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED).apply {
                     moveUpALane()
@@ -89,7 +90,7 @@ object SpawnerLevels {
 
         }
 
-         fun EnemySpawner.wave3() {
+        fun EnemySpawner.wave3() {
             // ramp up difficulty
             val lane1Actions = (0..5).flatMap {
                 listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(Enemy.moveStraightEnemy(70f), 0)))
@@ -109,7 +110,7 @@ object SpawnerLevels {
             )
         }
 
-         fun EnemySpawner.wave2() {
+        fun EnemySpawner.wave2() {
             // Sandy introduction
             addEnemy(
                 listOf(
@@ -141,7 +142,7 @@ object SpawnerLevels {
             wait(5f)
         }
 
-         fun EnemySpawner.wave1() {
+        fun EnemySpawner.wave1() {
             repeat(EnemySpawner.LANE_COUNT) {
                 addEnemy(
                     listOf(
@@ -213,9 +214,34 @@ object SpawnerLevels {
 
     fun World2(): EnemySpawner {
         return EnemySpawner().apply {
-            repeat(10) {
-                addEnemy(listOf(SpawnConfiguration(Enemy.moveStraightEnemy(), 3)), 0.1f)
-            }
+            val sneakySandyAction = addEnemyAction(SpawnConfiguration(SandyEnemy(40f), 8))
+            val actions1 = (0..5).flatMap {
+                val enemy = Enemy.moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED).apply {
+                    sineMovement()
+                }
+                listOf(Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(enemy, 6))))
+            }.toSequence()
+            val actions2 = (listOf(Actions.delay(1f)) + (0..5).flatMap {
+                val enemy = Enemy.moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED).apply {
+                    sineMovement()
+                }
+                listOf(Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(enemy, 2))))
+            }).toSequence()
+
+            val actions4 = (listOf(Actions.delay(2f)) + (0..5).flatMap {
+                val enemy = Enemy.moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED + 20f).apply {
+                    sineMovement(10f, 4f)
+                }
+                listOf(Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(enemy, 5))))
+            }).toSequence()
+
+            val action3 = Actions.delay(3.6f, Actions.parallel(
+                addEnemyAction(SpawnConfiguration(SandyEnemy(40f), 4)),
+                Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(SandyEnemy(60f), 3))),
+                Actions.delay(1f, addEnemyAction(SpawnConfiguration(SandyEnemy(50f), 7))),
+            ))
+
+            addActionToSequence(Actions.parallel(sneakySandyAction, actions1, actions2, action3, actions4))
         }
     }
 }

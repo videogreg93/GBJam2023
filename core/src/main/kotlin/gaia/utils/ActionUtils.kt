@@ -35,6 +35,8 @@ fun delayAction(duration: Float, runnable: () -> Unit): DelayAction {
     return Actions.delay(duration, Actions.run(runnable))
 }
 
+fun List<Action>.toSequence() = Actions.sequence(*this.toTypedArray())
+
 val DelayAction.remainingTime: Float
     get() = duration - time
 

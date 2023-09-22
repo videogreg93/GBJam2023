@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.odencave.SFX
 import com.odencave.assets.Assets
 import com.odencave.entities.player.Player
 import com.odencave.i18n.gaia.base.BackgroundGrid
@@ -126,6 +127,7 @@ class TitleScreen() : BasicScreen("Title") {
 
             else -> {
                 if (canContinue) {
+                    MegaManagers.soundManager.playSFX(SFX.select.get())
                     MegaManagers.soundManager.stopCurrentMusic()
                     MegaManagers.screenManager.changeScreen(MainScreen())
                 }

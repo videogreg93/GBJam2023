@@ -1,5 +1,6 @@
 package com.odencave
 
+import com.badlogic.gdx.Gdx
 import com.odencave.entities.player.Player
 import com.odencave.events.EnemyDestroyedEvent
 import com.odencave.models.ShipUpgrade
@@ -36,6 +37,7 @@ class ScoreManager: MegaManagers.Manager, EventListener<EnemyDestroyedEvent> {
     override fun onEvent(event: EnemyDestroyedEvent) {
         currentTotalScore += event.enemy.scoreValue
         upgradeScore += event.enemy.scoreValue
+        Gdx.app.log("SCOREMANAGER", currentTotalScore.toString())
         if (upgradeScore >= nextUpgrade.scoreThreshold) {
             // Upgrade ship
             player.upgradeShip(nextUpgrade)
@@ -45,6 +47,6 @@ class ScoreManager: MegaManagers.Manager, EventListener<EnemyDestroyedEvent> {
     }
 
     companion object {
-        const val SCORE_FOR_SECRET_LEVEL = 1000
+        const val SCORE_FOR_SECRET_LEVEL = 600
     }
 }

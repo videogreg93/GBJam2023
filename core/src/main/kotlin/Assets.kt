@@ -37,9 +37,11 @@ const val out = "shaders/out.png"}
     object Sounds {
 const val bullet1_ogg_sound = "sounds/bullet1.ogg"
 const val bullet2_ogg_sound = "sounds/bullet2.ogg"
+const val bulletLevel3_ogg_sound = "sounds/bulletLevel3.ogg"
 const val enemyHit_ogg_sound = "sounds/enemyHit.ogg"
 const val levelComplete_ogg_sound = "sounds/levelComplete.ogg"
 const val playerHit_ogg_sound = "sounds/playerHit.ogg"
+const val Select_ogg_sound = "sounds/Select.ogg"
 const val upgrade_ogg_sound = "sounds/upgrade.ogg"}
     object Title {
 const val letterbox = "title/letterbox.png"

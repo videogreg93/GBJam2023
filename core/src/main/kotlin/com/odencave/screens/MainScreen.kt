@@ -9,10 +9,6 @@ import com.odencave.SFX
 import com.odencave.ScoreManager
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
-import com.odencave.entities.enemy.Enemy
-import com.odencave.entities.enemy.Enemy.Companion.DEFAULT_ENEMY_MOVE_SPEED
-import com.odencave.entities.enemy.Enemy.Companion.moveStraightEnemy
-import com.odencave.entities.enemy.SandyEnemy
 import com.odencave.entities.enemy.spawner.EndLevelEvent
 import com.odencave.entities.enemy.spawner.SpawnerLevels
 import com.odencave.entities.player.HealthIndicator
@@ -20,9 +16,6 @@ import com.odencave.entities.player.Player
 import com.odencave.entities.player.PlayerBullet
 import com.odencave.entities.player.ScoreBar
 import com.odencave.events.PlayerDeathEvent
-import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
-import com.odencave.i18n.entities.enemy.spawner.EnemySpawner.Companion.LANE_COUNT
-import com.odencave.i18n.entities.enemy.spawner.SpawnConfiguration
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
 import com.odencave.models.ShipUpgrade
@@ -174,6 +167,7 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
                                 Globals.world4Unlocked -> {
                                     // TODO game complete
                                 }
+
                                 Globals.world2Unlocked || Globals.world3Unlocked -> Globals.world4Unlocked = true
                                 MegaManagers.getManager<ScoreManager>().currentTotalScore >= ScoreManager.SCORE_FOR_SECRET_LEVEL -> Globals.world3Unlocked
                                 else -> Globals.world2Unlocked = true
@@ -301,7 +295,7 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
         }
         crew.addMembers(bullet1, bullet2, bullet3)
         shootDebouncerReady = false
-        MegaManagers.soundManager.playSFXRandomPitch(SFX.playerBulletSounds.random().get(), -0.1f)
+        MegaManagers.soundManager.playSFX(SFX.playerBulletLevel3.get())
         MegaManagers.screenManager.addGlobalAction(Actions.delay(0.3f, Actions.run {
             shootDebouncerReady = true
         }))

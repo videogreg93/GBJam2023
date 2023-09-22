@@ -15,6 +15,9 @@ object SFX {
     val playerBulletSounds = listOf(playerBullet1SFX, playerBullet2SFX)
 
     @Asset
+    val playerBulletLevel3 = AssetDescriptor(Assets.Sounds.bulletLevel3_ogg_sound, Sound::class.java)
+
+    @Asset
     val playerHit = AssetDescriptor(Assets.Sounds.playerHit_ogg_sound, Sound::class.java)
 
     @Asset
@@ -25,4 +28,7 @@ object SFX {
 
     @Asset
     val levelComplete = AssetDescriptor(Assets.Sounds.levelComplete_ogg_sound, Sound::class.java)
+
+    @Asset
+    val select = AssetDescriptor(Assets.Sounds.Select_ogg_sound, Sound::class.java)
 }

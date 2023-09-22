@@ -11,8 +11,8 @@ import gaia.managers.assets.AssetManager.Companion.get
 import gaia.ui.utils.alignRightToLeftOf
 import ktx.math.minus
 
-class SandyEnemy : Enemy(sandyAsset.get()) {
-    val moveAmount = 50f
+class SandyEnemy(val moveAmount: Float = 50f) : Enemy(sandyAsset.get()) {
+
 
     init {
         val sequence = Actions.sequence().apply {
@@ -31,7 +31,7 @@ class SandyEnemy : Enemy(sandyAsset.get()) {
     }
 
     private fun shootBullet() {
-        val playerPos = crew?.getAllOf<Player>()?.first()?.pos() ?: error("Player not found")
+        val playerPos = crew?.getAllOf<Player>()?.first()?.pos() ?: return
         val myPos = pos()
         val direction = (playerPos - myPos).nor()
         val bullet = EnemyBullet(direction)
