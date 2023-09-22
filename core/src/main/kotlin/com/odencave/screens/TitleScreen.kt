@@ -1,5 +1,6 @@
 package com.odencave.screens
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Texture
@@ -114,6 +115,10 @@ class TitleScreen() : BasicScreen("Title") {
 
     override fun onAction(action: ActionListener.InputAction): Boolean {
         when (action) {
+            ActionListener.InputAction.ONE -> updateResolution(1)
+            ActionListener.InputAction.TWO -> updateResolution(2)
+            ActionListener.InputAction.THREE -> updateResolution(4)
+            ActionListener.InputAction.FOUR -> updateResolution(8)
             ActionListener.InputAction.ZERO -> {
                 Globals.selectedPaletteIndex++
                 Globals.currentBackgroundColor = Globals.selectedPalette.color4
@@ -127,6 +132,13 @@ class TitleScreen() : BasicScreen("Title") {
             }
         }
         return true
+    }
+
+    private fun updateResolution(multiplier: Int) {
+        Gdx.graphics.setWindowedMode(
+            (Globals.WORLD_WIDTH * multiplier).toInt(),
+            (Globals.WORLD_HEIGHT * multiplier).toInt()
+        )
     }
 
     companion object {

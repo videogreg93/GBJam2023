@@ -37,7 +37,7 @@ class DeathScreen(val player: Player) : BasicScreen("Death Screen") {
                 Actions.delay(1.5f, Actions.run {
                     player.resetHealth()
                     if (Globals.currentLives > 0) {
-                        MegaManagers.screenManager.changeScreen(MainScreen(player))
+                        MegaManagers.screenManager.changeScreen(MainScreen(player, false))
                     } else {
                         MegaManagers.screenManager.changeScreen(GameOverScreen())
                     }

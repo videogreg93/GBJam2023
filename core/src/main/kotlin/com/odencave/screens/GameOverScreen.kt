@@ -34,7 +34,7 @@ class GameOverScreen: BasicScreen("Game Over") {
         }
         gameOverLabel.x = centerPoint.x + 20 + (sin(accDelta * 2) * 20) - 20f
         gameOverLabel.y = (centerPoint.y + 20 + (cos(accDelta * 2) * 20)) - 20f
-        if (accDelta >= 5f) {
+        if (accDelta >= 10f) {
             MegaManagers.screenManager.changeScreen(TitleScreen())
         }
     }

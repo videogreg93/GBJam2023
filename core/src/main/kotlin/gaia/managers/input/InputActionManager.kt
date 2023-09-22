@@ -186,6 +186,7 @@ class InputActionManager : KtxInputAdapter {
         put(Input.Keys.LEFT, ActionListener.InputAction.LEFT)
         put(Input.Keys.RIGHT, ActionListener.InputAction.RIGHT)
         put(Input.Keys.X, ActionListener.InputAction.SHOOT)
+        put(Input.Keys.ENTER, ActionListener.InputAction.START)
         put(Input.Keys.NUM_1, ActionListener.InputAction.ONE)
         put(Input.Keys.NUM_2, ActionListener.InputAction.TWO)
         put(Input.Keys.NUM_3, ActionListener.InputAction.THREE)
@@ -255,7 +256,7 @@ interface ActionListener {
     }
 
     enum class InputAction {
-        UP, DOWN, LEFT, RIGHT, ONE, TWO, THREE, FOUR, SEVEN, EIGHT, NINE, ZERO, CLICK, RIGHT_CLICK, SHOOT
+        UP, DOWN, LEFT, RIGHT, ONE, TWO, THREE, FOUR, SEVEN, EIGHT, NINE, ZERO, CLICK, RIGHT_CLICK, SHOOT, START
     }
 }
 

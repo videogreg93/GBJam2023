@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.SFX
+import com.odencave.ScoreManager
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
 import com.odencave.entities.enemy.Enemy
@@ -13,6 +14,7 @@ import com.odencave.entities.enemy.Enemy.Companion.DEFAULT_ENEMY_MOVE_SPEED
 import com.odencave.entities.enemy.Enemy.Companion.moveStraightEnemy
 import com.odencave.entities.enemy.SandyEnemy
 import com.odencave.entities.enemy.spawner.EndLevelEvent
+import com.odencave.entities.enemy.spawner.SpawnerLevels
 import com.odencave.entities.player.HealthIndicator
 import com.odencave.entities.player.Player
 import com.odencave.entities.player.PlayerBullet
@@ -25,7 +27,6 @@ import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
 import com.odencave.models.ShipUpgrade
 import com.odencave.screens.DeathScreen
-import com.odencave.screens.GameOverScreen
 import com.odencave.ui.MapModal
 import gaia.Globals
 import gaia.managers.MegaManagers
@@ -38,7 +39,7 @@ import gaia.ui.BasicScreen
 import gaia.ui.utils.*
 
 
-class MainScreen(val player: Player = Player()) : BasicScreen("Main"), EventListener<EventInstance> {
+class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = true) : BasicScreen("Main"), EventListener<EventInstance> {
 
     // controls stuff
     var isUpPressed = false
@@ -56,12 +57,17 @@ class MainScreen(val player: Player = Player()) : BasicScreen("Main"), EventList
         player.alignLeft(10f)
         player.shouldDraw = false
         player.x -= 30f
-        val spawner = getSpawner()
+        val spawner = when {
+            Globals.world4Unlocked -> SpawnerLevels.World2()
+            Globals.world3Unlocked -> SpawnerLevels.World2()
+            Globals.world2Unlocked -> SpawnerLevels.World2()
+            else -> SpawnerLevels.World1()
+        }
         crew.addMembers(spawner)
         backgroundCrew.addMember(BackgroundGrid())
 
         // intro sequence
-        if (!Globals.skipIntro) {
+        if (!Globals.skipIntro && showMapScreen) {
             val safeCrew = crew
             val selectedIndex = when {
                 Globals.world4Unlocked -> 3
@@ -118,6 +124,7 @@ class MainScreen(val player: Player = Player()) : BasicScreen("Main"), EventList
             player.x += 50f
             player.canBeOutOfBounds = false
             crew.addMember(player)
+            MegaManagers.soundManager.playMusicWithIntro(BGM.get(), BGMIntro.get(), true)
             spawner.start()
         }
         val scoreHandler = ScoreBar().apply {
@@ -151,11 +158,26 @@ class MainScreen(val player: Player = Player()) : BasicScreen("Main"), EventList
                 }
                 player.addAction(
                     Actions.sequence(
+                        Actions.run {
+                            MegaManagers.soundManager.stopCurrentMusic()
+                        },
                         Actions.moveTo(dest.x, dest.y, 1f, Interpolation.fastSlow),
+                        Actions.run {
+                            MegaManagers.soundManager.playSFX(SFX.levelComplete.get())
+                        },
                         Actions.delay(2f),
                         Actions.moveBy(Globals.WORLD_WIDTH / 2f + 10f, 0f, 1.5f, Interpolation.fastSlow),
                         Actions.delay(1f),
                         Actions.run {
+                            // Update which level we're on
+                            when {
+                                Globals.world4Unlocked -> {
+                                    // TODO game complete
+                                }
+                                Globals.world2Unlocked || Globals.world3Unlocked -> Globals.world4Unlocked = true
+                                MegaManagers.getManager<ScoreManager>().currentTotalScore >= ScoreManager.SCORE_FOR_SECRET_LEVEL -> Globals.world3Unlocked
+                                else -> Globals.world2Unlocked = true
+                            }
                             MegaManagers.screenManager.changeScreen(MainScreen(player))
                             MegaManagers.inputActionManager.enableAllInputs()
                         }
@@ -163,210 +185,6 @@ class MainScreen(val player: Player = Player()) : BasicScreen("Main"), EventList
                 )
             }
         }
-    }
-
-    private fun getSpawner(): EnemySpawner {
-        return EnemySpawner().apply {
-            wave(1) {
-                wave1()
-            }
-            wave(2) {
-                wave2()
-            }
-            wave(3) {
-                wave3()
-            }
-            wave(4) {
-                wave4()
-                wave4Part2()
-            }
-            wait(5f)
-            finishLevel()
-        }
-    }
-
-    private fun EnemySpawner.wave4Part2() {
-        val bottomLane = (0..10).flatMap {
-            if (it % 2 == 0) {
-                listOf(
-                    Actions.delay(
-                        0.25f,
-                        addEnemyAction(SpawnConfiguration(moveStraightEnemy(DEFAULT_ENEMY_MOVE_SPEED).apply {
-                            moveLanes(1f, -1)
-                        }, 2))
-                    )
-                )
-            } else {
-                listOf(
-                    Actions.delay(
-                        0.25f,
-                        addEnemyAction(SpawnConfiguration(moveStraightEnemy(DEFAULT_ENEMY_MOVE_SPEED).apply {
-                            moveLanes(1f, 2)
-                        }, 1))
-                    )
-                )
-            }
-        }
-        addActionToSequence(
-            Actions.parallel(
-                Actions.sequence(*bottomLane.toTypedArray()),
-            )
-        )
-    }
-
-    private fun EnemySpawner.wave4() {
-        repeat(4) {
-            val enemy = moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED).apply {
-                moveUpALane()
-            }
-            addEnemy(listOf(SpawnConfiguration(enemy, 2)), 0.5f)
-        }
-        wait(1f)
-        repeat(4) {
-            val enemy = moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED).apply {
-                moveDownALane()
-            }
-            addEnemy(listOf(SpawnConfiguration(enemy, 5)), 0.5f)
-        }
-        val actions1 = (0..5).flatMap {
-            listOf(
-                Actions.delay(
-                    0.5f,
-                    addEnemyAction(SpawnConfiguration(moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED), 1))
-                )
-            )
-        }
-        val actions2 = listOf(
-            Actions.delay(1f),
-            addEnemyAction(SpawnConfiguration(SandyEnemy(), 7))
-        ) + (0..5).flatMap {
-            listOf(
-                Actions.delay(
-                    0.5f,
-                    addEnemyAction(SpawnConfiguration(moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED), 6))
-                )
-            )
-        }
-        val actions3 = listOf(
-            Actions.delay(2f),
-            addEnemyAction(SpawnConfiguration(SandyEnemy(), 3)),
-            Actions.delay(1f),
-            addEnemyAction(SpawnConfiguration(SandyEnemy(), 5)),
-            Actions.delay(1f, addEnemyAction(SpawnConfiguration(SandyEnemy(), 1))),
-            Actions.delay(1f, addEnemyAction(SpawnConfiguration(SandyEnemy(), 4)))
-        )
-        addActionToSequence(
-            Actions.parallel(
-                Actions.sequence(*actions1.toTypedArray()),
-                Actions.sequence(*actions2.toTypedArray()),
-                Actions.sequence(*actions3.toTypedArray()),
-            )
-        )
-        wait(1f)
-
-    }
-
-    private fun EnemySpawner.wave3() {
-        // ramp up difficulty
-        val lane1Actions = (0..5).flatMap {
-            listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 0)))
-        }
-        val lane2Actions = listOf(Actions.delay(1f)) + (0..5).flatMap {
-            listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 2)))
-        }
-        val lane4Actions = listOf(Actions.delay(2f)) + (0..5).flatMap {
-            listOf(Actions.delay(0.5f), addEnemyAction(SpawnConfiguration(moveStraightEnemy(70f), 6)))
-        }
-        addActionToSequence(
-            Actions.parallel(
-                Actions.sequence(*lane1Actions.toTypedArray()),
-                Actions.sequence(*lane2Actions.toTypedArray()),
-                Actions.sequence(*lane4Actions.toTypedArray()),
-            )
-        )
-    }
-
-    private fun EnemySpawner.wave2() {
-        // Sandy introduction
-        addEnemy(
-            listOf(
-                SpawnConfiguration(
-                    SandyEnemy(),
-                    5
-                )
-            ),
-            2f
-        )
-        wait(1.5f)
-        addEnemy(
-            listOf(
-                SpawnConfiguration(
-                    SandyEnemy(),
-                    2
-                )
-            )
-        )
-        wait(1.5f)
-        addEnemy(
-            listOf(
-                SpawnConfiguration(
-                    SandyEnemy(),
-                    3
-                )
-            )
-        )
-        wait(5f)
-    }
-
-    private fun EnemySpawner.wave1() {
-        repeat(LANE_COUNT) {
-            addEnemy(
-                listOf(
-                    SpawnConfiguration(
-                        Enemy().apply {
-                            moveStraight()
-                        },
-                        it
-                    ),
-                ),
-                if (it == 0) 0f else 0.5f
-            )
-        }
-        wait(2f)
-        repeat(LANE_COUNT) {
-            addEnemy(
-                listOf(
-                    SpawnConfiguration(
-                        Enemy().apply {
-                            moveStraight()
-                        },
-                        8 - it
-                    ),
-                ),
-                if (it == 0) 0f else 0.5f
-            )
-        }
-        wait(2f)
-        addEnemy(
-            listOf(
-                SpawnConfiguration(moveStraightEnemy(), 2),
-                SpawnConfiguration(moveStraightEnemy(), 6),
-            )
-        )
-        addEnemy(
-            listOf(
-                SpawnConfiguration(moveStraightEnemy(), 3),
-                SpawnConfiguration(moveStraightEnemy(), 4),
-            ),
-            2f
-        )
-        addEnemy(
-            listOf(
-                SpawnConfiguration(moveStraightEnemy(), 5),
-                SpawnConfiguration(moveStraightEnemy(), 7),
-            ),
-            2f
-        )
     }
 
     override fun render(delta: Float) {

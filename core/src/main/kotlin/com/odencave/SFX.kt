@@ -22,4 +22,7 @@ object SFX {
 
     @Asset
     val playerUpgrade = AssetDescriptor(Assets.Sounds.upgrade_ogg_sound, Sound::class.java)
+
+    @Asset
+    val levelComplete = AssetDescriptor(Assets.Sounds.levelComplete_ogg_sound, Sound::class.java)
 }
