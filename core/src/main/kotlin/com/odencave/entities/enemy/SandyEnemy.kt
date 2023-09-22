@@ -31,7 +31,7 @@ class SandyEnemy(val moveAmount: Float = 50f) : Enemy(sandyAsset.get()) {
     }
 
     private fun shootBullet() {
-        val playerPos = crew?.getAllOf<Player>()?.first()?.pos() ?: return
+        val playerPos = crew?.getAllOf<Player>()?.firstOrNull()?.pos() ?: return
         val myPos = pos()
         val direction = (playerPos - myPos).nor()
         val bullet = EnemyBullet(direction)

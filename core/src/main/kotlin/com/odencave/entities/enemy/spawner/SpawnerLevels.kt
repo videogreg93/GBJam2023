@@ -213,7 +213,7 @@ object SpawnerLevels {
     }
 
     fun World2(): EnemySpawner {
-        return EnemySpawner().apply {
+        fun EnemySpawner.wave1() {
             val sneakySandyAction = addEnemyAction(SpawnConfiguration(SandyEnemy(40f), 8))
             val actions1 = (0..5).flatMap {
                 val enemy = Enemy.moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED).apply {
@@ -242,6 +242,13 @@ object SpawnerLevels {
             ))
 
             addActionToSequence(Actions.parallel(sneakySandyAction, actions1, actions2, action3, actions4))
+        }
+        return EnemySpawner().apply {
+            wave(1) {
+                wave1()
+            }
+            wait(5f)
+            finishLevel()
         }
     }
 }
