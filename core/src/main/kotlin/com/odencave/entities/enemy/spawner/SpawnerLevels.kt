@@ -1,6 +1,7 @@
 package com.odencave.entities.enemy.spawner
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.odencave.entities.enemy.Boss
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.SandyEnemy
 import com.odencave.i18n.entities.enemy.spawner.EnemySpawner
@@ -345,7 +346,10 @@ object SpawnerLevels {
         }
     }
 
+    // Boss Level
     fun World4(): EnemySpawner {
-
+        return EnemySpawner().apply {
+            addBoss()
+        }
     }
 }

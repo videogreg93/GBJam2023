@@ -9,6 +9,8 @@ const val deathScreen = "backgrounds/deathScreen.png"
 const val one = "backgrounds/one.png"
 const val title = "backgrounds/title.png"}
 const val border = "border.png"
+    object Boss {
+const val idle = "boss/idle.png"}
     object Enemy {
 const val bullet = "enemy/bullet.png"
 const val john = "enemy/john.png"

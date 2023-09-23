@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.odencave.entities.enemy.Boss
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.spawner.EndLevelEvent
 import gaia.Globals
@@ -28,6 +29,17 @@ class EnemySpawner : BaseActor() {
 
     fun skipCurrentWave() {
         enemySequenceAction.skip()
+    }
+
+    fun addBoss() {
+        val action = Actions.run {
+            val boss = Boss().apply {
+                center()
+                x = Globals.WORLD_WIDTH/2f
+            }
+            crew?.addMember(boss)
+        }
+        enemySequenceAction.addAction(action)
     }
 
     fun addEnemy(configs: List<SpawnConfiguration>, delayFromPrevious: Float = 0f) {
