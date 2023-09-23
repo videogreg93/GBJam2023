@@ -47,6 +47,7 @@ class ScoreManager: MegaManagers.Manager, EventListener<EnemyDestroyedEvent> {
     }
 
     companion object {
-        const val SCORE_FOR_SECRET_LEVEL = 600
+        const val SCORE_FOR_SECRET_LEVEL = 6600
+//        const val SCORE_FOR_SECRET_LEVEL = 600
     }
 }

@@ -296,7 +296,21 @@ object SpawnerLevels {
                 Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(SandyEnemy(40f, false), 3))),
                 Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(SandyEnemy(35f, true), 7))),
             )
-            // todo move straigh then change lane at last minute enenmies
+            wait(2f)
+
+            val straightSequence = (0..5).map {
+                val enemy = Enemy.moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED).apply {
+                    moveLanes(0.5f, 2)
+                    moveLanes(1.3f, -2)
+                }
+                Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(enemy, 4)))
+            }.toSequence()
+
+            val parallel2 = Actions.parallel(
+                sandySequence2,
+                straightSequence
+            )
+            addActionToSequence(parallel2)
         }
 
         return EnemySpawner().apply {
