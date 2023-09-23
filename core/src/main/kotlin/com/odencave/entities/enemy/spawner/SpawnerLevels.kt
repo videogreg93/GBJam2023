@@ -257,6 +257,19 @@ object SpawnerLevels {
                 listOf(Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(enemy, 4))))
             }).toSequence()
             addActionToSequence(middleLane)
+            wait(1.2f)
+            val sequence2 = Actions.sequence(
+                addEnemyAction(SpawnConfiguration(SandyEnemy(40f, false), 7)),
+                Actions.delay(0.5f, addEnemyAction(SpawnConfiguration(SandyEnemy(40f, false), 2)))
+            )
+            addActionToSequence(sequence2)
+            val middleLane2 = (listOf(Actions.delay(1f)) +  (0..5).flatMap {
+                val enemy = Enemy.moveStraightEnemy(-Enemy.FASTER_ENEMY_MOVE_SPEED, true).apply {
+                    sineMovement()
+                }
+                listOf(Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(enemy, 4))))
+            }).toSequence()
+            addActionToSequence(middleLane2)
         }
 
 

@@ -13,7 +13,7 @@ import gaia.managers.assets.AssetManager.Companion.get
 import gaia.ui.utils.alignRightToLeftOf
 import ktx.math.minus
 
-class SandyEnemy(val moveAmount: Float = 50f, val arriveFromBack: Boolean = false) : Enemy(sandyAsset.get()) {
+class SandyEnemy(val moveAmount: Float = 50f, arriveFromBack: Boolean = false) : Enemy(sandyAsset.get(), arriveFromBack) {
 
 
     init {
@@ -32,13 +32,6 @@ class SandyEnemy(val moveAmount: Float = 50f, val arriveFromBack: Boolean = fals
             addAction(Actions.run { removeFromCrew() })
         }
         addAction(sequence)
-    }
-
-    override fun onAddedToCrew(crew: Crew) {
-        super.onAddedToCrew(crew)
-        if (arriveFromBack) {
-            x -= Globals.WORLD_WIDTH
-        }
     }
 
     private fun shootBullet() {

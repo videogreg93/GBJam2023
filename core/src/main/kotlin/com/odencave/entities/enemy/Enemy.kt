@@ -20,7 +20,7 @@ import gaia.managers.assets.AssetManager.Companion.get
 import kotlin.math.sin
 import kotlin.properties.Delegates
 
-open class Enemy(texture: Texture = johnAsset.get()) : Entity(texture) {
+open class Enemy(texture: Texture = johnAsset.get(), val arriveFromBack: Boolean = false) : Entity(texture) {
 
     var scoreValue = 10
     var currentMoveSpeed = DEFAULT_ENEMY_MOVE_SPEED
@@ -49,6 +49,9 @@ open class Enemy(texture: Texture = johnAsset.get()) : Entity(texture) {
     override fun onAddedToCrew(crew: Crew) {
         super.onAddedToCrew(crew)
         staticY = y
+        if (arriveFromBack) {
+            x -= Globals.WORLD_WIDTH
+        }
     }
 
     fun moveUpALane(delay: Float = 1f) = moveLanes(delay, 1)
@@ -86,7 +89,9 @@ open class Enemy(texture: Texture = johnAsset.get()) : Entity(texture) {
         const val DEFAULT_ENEMY_MOVE_SPEED = 45f
         const val FASTER_ENEMY_MOVE_SPEED = 65f
 
-        fun moveStraightEnemy(speed: Float = DEFAULT_ENEMY_MOVE_SPEED) = Enemy().apply {
+        fun moveStraightEnemy(speed: Float = DEFAULT_ENEMY_MOVE_SPEED, arriveFromBack: Boolean = false) = Enemy(
+            arriveFromBack = arriveFromBack
+        ).apply {
             moveStraight(speed)
         }
 
