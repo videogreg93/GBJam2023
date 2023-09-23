@@ -344,4 +344,8 @@ object SpawnerLevels {
             finishLevel()
         }
     }
+
+    fun World4(): EnemySpawner {
+
+    }
 }
