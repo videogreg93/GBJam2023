@@ -6,17 +6,20 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.assets.Assets
 import com.odencave.entities.player.Player
+import gaia.Globals
+import gaia.base.Crew
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 import gaia.ui.utils.alignRightToLeftOf
 import ktx.math.minus
 
-class SandyEnemy(val moveAmount: Float = 50f) : Enemy(sandyAsset.get()) {
+class SandyEnemy(val moveAmount: Float = 50f, val arriveFromBack: Boolean = false) : Enemy(sandyAsset.get()) {
 
 
     init {
+        val signMultiplier = if (arriveFromBack) -1 else 1
         val sequence = Actions.sequence().apply {
-            addAction(Actions.moveBy(-moveAmount, 0f, 2f, Interpolation.fastSlow))
+            addAction(Actions.moveBy(-moveAmount * signMultiplier, 0f, 2f, Interpolation.fastSlow))
             addAction(Actions.delay(0.5f))
             repeat(3) {
                 addAction(Actions.delay(0.15f))
@@ -25,9 +28,17 @@ class SandyEnemy(val moveAmount: Float = 50f) : Enemy(sandyAsset.get()) {
                         shootBullet()
                     })
             }
-            addAction(Actions.moveBy(moveAmount + 10, 0f, 2f, Interpolation.slowFast))
+            addAction(Actions.moveBy((moveAmount + 10) * signMultiplier, 0f, 2f, Interpolation.slowFast))
+            addAction(Actions.run { removeFromCrew() })
         }
         addAction(sequence)
+    }
+
+    override fun onAddedToCrew(crew: Crew) {
+        super.onAddedToCrew(crew)
+        if (arriveFromBack) {
+            x -= Globals.WORLD_WIDTH
+        }
     }
 
     private fun shootBullet() {

@@ -146,6 +146,7 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
 
             is EndLevelEvent -> {
                 MegaManagers.inputActionManager.disableAllInputs()
+                player.stop()
                 val dest = player.calculatePositionFor {
                     center()
                 }

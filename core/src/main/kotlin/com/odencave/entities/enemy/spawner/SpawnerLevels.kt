@@ -243,9 +243,29 @@ object SpawnerLevels {
 
             addActionToSequence(Actions.parallel(sneakySandyAction, actions1, actions2, action3, actions4))
         }
+
+        fun EnemySpawner.wave2() {
+            val sequence = Actions.sequence(
+                addEnemyAction(SpawnConfiguration(SandyEnemy(40f, true), 7)),
+                Actions.delay(0.5f, addEnemyAction(SpawnConfiguration(SandyEnemy(40f, true), 2)))
+            )
+            addActionToSequence(sequence)
+            val middleLane = (listOf(Actions.delay(1f)) +  (0..5).flatMap {
+                val enemy = Enemy.moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED).apply {
+                    sineMovement()
+                }
+                listOf(Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(enemy, 4))))
+            }).toSequence()
+            addActionToSequence(middleLane)
+        }
+
+
         return EnemySpawner().apply {
             wave(1) {
                 wave1()
+            }
+            wave(2) {
+                wave2()
             }
             wait(5f)
             finishLevel()
