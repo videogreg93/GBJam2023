@@ -264,14 +264,40 @@ object SpawnerLevels {
             )
             addActionToSequence(sequence2)
             val middleLane2 = (listOf(Actions.delay(1f)) +  (0..5).flatMap {
-                val enemy = Enemy.moveStraightEnemy(-Enemy.FASTER_ENEMY_MOVE_SPEED, true).apply {
+                val enemy = Enemy.moveStraightEnemy(-(Enemy.FASTER_ENEMY_MOVE_SPEED + 5), true).apply {
                     sineMovement()
                 }
-                listOf(Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(enemy, 4))))
+                listOf(Actions.delay(0.45f, addEnemyAction(SpawnConfiguration(enemy, 4))))
             }).toSequence()
             addActionToSequence(middleLane2)
         }
 
+        fun EnemySpawner.wave3() {
+            val sandySequence = Actions.sequence(
+                addEnemyAction(SpawnConfiguration(SandyEnemy(40f), 8)),
+                Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(SandyEnemy(35f, true), 2))),
+                Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(SandyEnemy(40f, false), 2))),
+                Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(SandyEnemy(35f, true), 8))),
+            )
+            val middleLane = (listOf(Actions.delay(0.8f)) +  (0..5).flatMap {
+                val enemy = Enemy.moveStraightEnemy(Enemy.FASTER_ENEMY_MOVE_SPEED).apply {
+                    sineMovement(30f, 2.2f)
+                }
+                listOf(Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(enemy, 4))))
+            }).toSequence()
+            val parallel = Actions.parallel(
+                sandySequence,
+                middleLane
+            )
+            addActionToSequence(parallel)
+            val sandySequence2 = Actions.sequence(
+                addEnemyAction(SpawnConfiguration(SandyEnemy(40f), 7)),
+                Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(SandyEnemy(35f, true), 3))),
+                Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(SandyEnemy(40f, false), 3))),
+                Actions.delay(0.4f, addEnemyAction(SpawnConfiguration(SandyEnemy(35f, true), 7))),
+            )
+            // todo move straigh then change lane at last minute enenmies
+        }
 
         return EnemySpawner().apply {
             wave(1) {
@@ -279,6 +305,9 @@ object SpawnerLevels {
             }
             wave(2) {
                 wave2()
+            }
+            wave(3) {
+                wave3()
             }
             wait(5f)
             finishLevel()
