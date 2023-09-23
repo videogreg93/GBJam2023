@@ -14,7 +14,7 @@ object SpawnerLevels {
                 if (it % 2 == 0) {
                     listOf(
                         Actions.delay(
-                            0.25f,
+                            0.3f,
                             addEnemyAction(SpawnConfiguration(Enemy.moveStraightEnemy(Enemy.DEFAULT_ENEMY_MOVE_SPEED).apply {
                                 moveLanes(1f, -1)
                             }, 2))
@@ -23,7 +23,7 @@ object SpawnerLevels {
                 } else {
                     listOf(
                         Actions.delay(
-                            0.25f,
+                            0.3f,
                             addEnemyAction(SpawnConfiguration(Enemy.moveStraightEnemy(Enemy.DEFAULT_ENEMY_MOVE_SPEED).apply {
                                 moveLanes(1f, 2)
                             }, 1))
@@ -313,6 +313,20 @@ object SpawnerLevels {
             addActionToSequence(parallel2)
         }
 
+        fun EnemySpawner.wave4() {
+            val actions1 = (0..8).flatMap {
+                val lane = 8 - it
+                listOf(
+                    Actions.delay(0.3f,
+                        addEnemyAction(SpawnConfiguration(SandyEnemy(), lane))),
+                    Actions.delay(0.3f,
+                        addEnemyAction(SpawnConfiguration(SandyEnemy(40f, arriveFromBack = true), lane))),
+                    Actions.delay(0.1f)
+                )
+            }.toSequence()
+            addActionToSequence(actions1)
+        }
+
         return EnemySpawner().apply {
             wave(1) {
                 wave1()
@@ -322,6 +336,9 @@ object SpawnerLevels {
             }
             wave(3) {
                 wave3()
+            }
+            wave(4) {
+                wave4()
             }
             wait(5f)
             finishLevel()
