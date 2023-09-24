@@ -10,11 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.odencave.assets.Assets
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.EnemyBullet
+import com.odencave.entities.enemy.spawner.EndLevelEvent
 import com.odencave.entities.player.Player
 import gaia.Globals
 import gaia.base.Crew
+import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
+import gaia.utils.FloatLerpAction
 import gaia.utils.createAnimation
 import ktx.actors.plus
 import ktx.math.minus
@@ -24,12 +27,16 @@ class Boss : Enemy(idleTexture.get()) {
 
     private var canFlicker = true
 
-    val maxHealth = 100
+    val maxHealth = 10
     var currentHealth = maxHealth
         set(value) {
             field = value.coerceAtLeast(0)
         }
     var startingPosition: Vector2 = Vector2(15f, -48.0f)
+
+    private val attackAction by lazy { Actions.forever(
+        attackSequence1(this.crew!!) + attackSequence2(crew!!)
+    ) }
 
     init {
         setPosition(1000f, 1000f)
@@ -48,9 +55,7 @@ class Boss : Enemy(idleTexture.get()) {
                 startingPosition = Vector2(x, y)
                 println(startingPosition)
             })
-            addAction(Actions.forever(
-                attackSequence1(crew) + attackSequence2(crew)
-            ))
+            addAction(attackAction)
         }
         addAction(sequence)
     }
@@ -143,6 +148,20 @@ class Boss : Enemy(idleTexture.get()) {
             canFlicker = false
             val flickerDuration = addFlickerAction(0.05f, 6)
             addAction(Actions.delay(flickerDuration, Actions.run { canFlicker = true }))
+        }
+        if (currentHealth <= 0) {
+            attackAction.finish()
+            actions.clear()
+            val hitStunAction = FloatLerpAction.createLerpAction(
+                0.5f, 1f, 2f, Interpolation.slowFast
+            ) {
+                Globals.gameSpeed = it
+            }
+            MegaManagers.screenManager.addGlobalAction(hitStunAction)
+            MegaManagers.screenManager.addGlobalAction(Actions.delay(hitStunAction.duration * 2, Actions.run {
+                this.removeFromCrew()
+                MegaManagers.eventManager.sendEvent(EndLevelEvent())
+            }))
         }
     }
 

@@ -20,6 +20,7 @@ import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.i18n.gaia.ui.shaders.Shaders
 import com.odencave.models.ShipUpgrade
 import com.odencave.screens.DeathScreen
+import com.odencave.screens.GameCompleteScreen
 import com.odencave.ui.MapModal
 import gaia.Globals
 import gaia.managers.MegaManagers
@@ -166,7 +167,7 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
                             // Update which level we're on
                             when {
                                 Globals.world4Unlocked -> {
-                                    // TODO game complete
+                                    MegaManagers.screenManager.changeScreen(GameCompleteScreen())
                                 }
 
                                 Globals.world2Unlocked || Globals.world3Unlocked -> Globals.world4Unlocked = true

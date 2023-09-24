@@ -3,10 +3,12 @@ package com.odencave.entities.enemy.boss
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
+import com.odencave.SFX
 import com.odencave.entities.player.ScoreBar.Companion.barFillingAsset
 import com.odencave.entities.player.ScoreBar.Companion.barFrameAsset
 import gaia.Globals
 import gaia.base.BaseActor
+import gaia.managers.MegaManagers
 import gaia.managers.assets.AssetManager.Companion.get
 import gaia.utils.FloatLerpAction.Companion.createLerpAction
 
@@ -26,6 +28,7 @@ class BossHealthBar(private val boss: Boss) : BaseActor(barFrameAsset.get()) {
                     ) { currentValue ->
                         shownPercentage = currentValue
                         initialLoad = false
+                        MegaManagers.soundManager.playSFX(SFX.select.get(), -0.4f)
                     })
             } else {
                 addAction(

@@ -31,4 +31,7 @@ object SFX {
 
     @Asset
     val select = AssetDescriptor(Assets.Sounds.Select_ogg_sound, Sound::class.java)
+
+    @Asset
+    val textAdvance = AssetDescriptor(Assets.Sounds.text_ogg_sound, Sound::class.java)
 }

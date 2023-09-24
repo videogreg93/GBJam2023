@@ -45,6 +45,7 @@ const val enemyHit_ogg_sound = "sounds/enemyHit.ogg"
 const val levelComplete_ogg_sound = "sounds/levelComplete.ogg"
 const val playerHit_ogg_sound = "sounds/playerHit.ogg"
 const val Select_ogg_sound = "sounds/Select.ogg"
+const val text_ogg_sound = "sounds/text.ogg"
 const val upgrade_ogg_sound = "sounds/upgrade.ogg"}
     object Title {
 const val letterbox = "title/letterbox.png"
