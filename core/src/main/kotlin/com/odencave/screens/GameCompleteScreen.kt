@@ -43,8 +43,7 @@ class GameCompleteScreen : BasicScreen("Game Over") {
                     finalScoreLabel.center()
                     crew.addMember(finalScoreLabel)
                     finalScoreLabel.addAction(Actions.delay(10f, Actions.run {
-                        Globals.resetForNewGame()
-                        MegaManagers.screenManager.changeScreen(TitleScreen())
+                        MegaManagers.screenManager.changeScreen(LeaderboardScreen())
                     }))
                 })
             )

@@ -41,6 +41,7 @@ class Boss : Enemy(idleTexture.get()) {
     ) }
 
     init {
+        scoreValue = 1000
         setPosition(1000f, 1000f)
         updateSprite()
         shouldDraw = false
@@ -164,7 +165,7 @@ class Boss : Enemy(idleTexture.get()) {
             }
             MegaManagers.screenManager.addGlobalAction(hitStunAction)
             MegaManagers.screenManager.addGlobalAction(Actions.delay(hitStunAction.duration * 2, Actions.run {
-                this.removeFromCrew()
+                this.destroy()
                 MegaManagers.eventManager.sendEvent(EndLevelEvent())
             }))
         } else if (canFlicker) {

@@ -33,7 +33,7 @@ import gaia.ui.BasicScreen
 import gaia.ui.utils.*
 
 
-class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = true) : BasicScreen("Main"), EventListener<EventInstance> {
+class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = true, val playBossMusic: Boolean = false) : BasicScreen("Main"), EventListener<EventInstance> {
 
     // controls stuff
     var isUpPressed = false
@@ -94,7 +94,7 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
                         Actions.run {
                             hideShipCursor()
                             safeCrew.addMember(player)
-                            if (Globals.world4Unlocked) {
+                            if (playBossMusic) {
                                 // Play boss music instead
                                 MegaManagers.soundManager.playMusic(BossBGM.get(), true, false)
                             } else {
@@ -134,7 +134,7 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
             player.x += 50f
             player.canBeOutOfBounds = false
             crew.addMember(player)
-            if (Globals.world4Unlocked) {
+            if (playBossMusic) {
                 // Play boss music instead
                 MegaManagers.soundManager.playMusic(BossBGM.get(), true, false)
             } else {
@@ -196,7 +196,7 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
 
                                 Globals.world2Unlocked || Globals.world3Unlocked -> {
                                     Globals.world4Unlocked = true
-                                    MegaManagers.screenManager.changeScreen(MainScreen(player))
+                                    MegaManagers.screenManager.changeScreen(MainScreen(player, true, true))
                                 }
 
                                 MegaManagers.getManager<ScoreManager>().currentTotalScore >= ScoreManager.SCORE_FOR_SECRET_LEVEL -> {
