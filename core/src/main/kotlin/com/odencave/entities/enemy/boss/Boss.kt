@@ -26,6 +26,7 @@ import kotlin.math.sin
 class Boss : Enemy(idleTexture.get()) {
 
     private var canFlicker = true
+    var isDead = false
 
     val maxHealth = 10
     var currentHealth = maxHealth
@@ -144,14 +145,12 @@ class Boss : Enemy(idleTexture.get()) {
 
     fun loseHealth() {
         currentHealth--
-        if (canFlicker) {
-            canFlicker = false
-            val flickerDuration = addFlickerAction(0.05f, 6)
-            addAction(Actions.delay(flickerDuration, Actions.run { canFlicker = true }))
-        }
-        if (currentHealth <= 0) {
+        if (currentHealth <= 0 && !isDead) {
+            isDead
             attackAction.finish()
             actions.clear()
+            val flickerDuration = addFlickerAction(0.005f, 6)
+            addAction(Actions.delay(flickerDuration, Actions.run { canFlicker = true }))
             val hitStunAction = FloatLerpAction.createLerpAction(
                 0.5f, 1f, 2f, Interpolation.slowFast
             ) {
@@ -162,6 +161,10 @@ class Boss : Enemy(idleTexture.get()) {
                 this.removeFromCrew()
                 MegaManagers.eventManager.sendEvent(EndLevelEvent())
             }))
+        } else if (canFlicker) {
+            canFlicker = false
+            val flickerDuration = addFlickerAction(0.05f, 6)
+            addAction(Actions.delay(flickerDuration, Actions.run { canFlicker = true }))
         }
     }
 
