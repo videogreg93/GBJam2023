@@ -94,7 +94,12 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
                         Actions.run {
                             hideShipCursor()
                             safeCrew.addMember(player)
-                            MegaManagers.soundManager.playMusicWithIntro(BGM.get(), BGMIntro.get(), true)
+                            if (Globals.world4Unlocked) {
+                                // Play boss music instead
+                                MegaManagers.soundManager.playMusic(BossBGM.get(), true, false)
+                            } else {
+                                MegaManagers.soundManager.playMusicWithIntro(BGM.get(), BGMIntro.get(), true)
+                            }
                         },
                         Actions.moveBy(0f, Globals.WORLD_HEIGHT / 2, 2f, Interpolation.slowFast),
                         Actions.run {
@@ -129,7 +134,12 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
             player.x += 50f
             player.canBeOutOfBounds = false
             crew.addMember(player)
-            MegaManagers.soundManager.playMusicWithIntro(BGM.get(), BGMIntro.get(), true)
+            if (Globals.world4Unlocked) {
+                // Play boss music instead
+                MegaManagers.soundManager.playMusic(BossBGM.get(), true, false)
+            } else {
+                MegaManagers.soundManager.playMusicWithIntro(BGM.get(), BGMIntro.get(), true)
+            }
             spawner.start()
         }
         val scoreHandler = ScoreBar().apply {
@@ -147,11 +157,13 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
     override fun onEvent(event: EventInstance) {
         when (event) {
             is PlayerDeathEvent -> {
+                MegaManagers.inputActionManager.disableAllInputs()
                 MegaManagers.soundManager.stopCurrentMusic()
                 player.removeFromCrew()
                 MegaManagers.screenManager.addGlobalAction(
                     Actions.delay(2f, Actions.run {
                         MegaManagers.screenManager.changeScreen(DeathScreen(player))
+                        MegaManagers.inputActionManager.enableAllInputs()
                     })
                 )
             }
@@ -252,15 +264,15 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
             ActionListener.InputAction.TWO -> updateResolution(2)
             ActionListener.InputAction.THREE -> updateResolution(4)
             ActionListener.InputAction.FOUR -> updateResolution(8)
-            ActionListener.InputAction.SEVEN -> {
-                if (Globals.godMode) {
-                    Globals.godMode = false
-                    Globals.gameSpeed = 1f
-                } else {
-                    Globals.godMode = true
-                    Globals.gameSpeed = 5f
-                }
-            }
+//            ActionListener.InputAction.SEVEN -> {
+//                if (Globals.godMode) {
+//                    Globals.godMode = false
+//                    Globals.gameSpeed = 1f
+//                } else {
+//                    Globals.godMode = true
+//                    Globals.gameSpeed = 5f
+//                }
+//            }
 
             ActionListener.InputAction.ZERO -> {
                 Globals.selectedPaletteIndex++
@@ -392,6 +404,9 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
     }
 
     companion object {
+        @Asset
+        val BossBGM = AssetDescriptor(Assets.ZenithBossTheme_ogg_sound, Music::class.java)
+
         @Asset
         val BGM = AssetDescriptor(Assets.ZenithGameTheme_ogg_sound, Music::class.java)
 

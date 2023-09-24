@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
+import com.odencave.SFX
 import com.odencave.assets.Assets
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.EnemyBullet
@@ -76,6 +77,7 @@ class Boss : Enemy(idleTexture.get()) {
             // val myPos = Vector2(x,y)
             val enemyBullet = EnemyBullet(Vector2(-1f, 0f)).apply { centerOn(this@Boss) }
             crew.addMember(enemyBullet)
+            MegaManagers.soundManager.playSFXRandomPitch(SFX.bossShoot.get())
         }))
         return Actions.sequence(
             Actions.parallel(
@@ -93,12 +95,13 @@ class Boss : Enemy(idleTexture.get()) {
                 repeat(5) {
                     val spawnY = (-Globals.WORLD_HEIGHT / 2) + ((it + 2) * distanceBetweenLanes)
                     val spawnX = 0f
-                    val heatSeekingBullet = HeatSeakingBullet(Vector2(spawnX, spawnY)).apply {
+                    val heatSeekingBullet = HeatSeakingBullet(Vector2(spawnX, spawnY), 1f + (it * 0.1f)).apply {
                         centerOn(this@Boss)
                         y + 2f * (it - 1)
                     }
                     crew.addMember(heatSeekingBullet)
                 }
+                MegaManagers.soundManager.playSFXRandomPitch(SFX.bossShoot.get())
             },
             Actions.delay(3f),
             Actions.moveBy(0f, 20f, 0.3f),
@@ -110,6 +113,7 @@ class Boss : Enemy(idleTexture.get()) {
                     val enemyBullet = EnemyBullet(Vector2(-1f, 0f)).apply { setPosition(spawnX, spawnY) }
                     crew.addMember(enemyBullet)
                 }
+                MegaManagers.soundManager.playSFXRandomPitch(SFX.bossShoot.get())
             },
             Actions.delay(0.1f),
             Actions.moveBy(0f, -20f, 0.3f),
@@ -121,6 +125,7 @@ class Boss : Enemy(idleTexture.get()) {
                     val enemyBullet = EnemyBullet(Vector2(-1f, 0f)).apply { setPosition(spawnX, spawnY) }
                     crew.addMember(enemyBullet)
                 }
+                MegaManagers.soundManager.playSFXRandomPitch(SFX.bossShoot.get())
             },
             Actions.delay(0.1f),
             Actions.moveBy(0f, -20f, 0.3f),
@@ -132,6 +137,7 @@ class Boss : Enemy(idleTexture.get()) {
                     val enemyBullet = EnemyBullet(Vector2(-1f, 0f)).apply { setPosition(spawnX, spawnY) }
                     crew.addMember(enemyBullet)
                 }
+                MegaManagers.soundManager.playSFXRandomPitch(SFX.bossShoot.get())
             },
             Actions.delay(0.1f),
             Actions.moveBy(0f, 20f, 0.3f),

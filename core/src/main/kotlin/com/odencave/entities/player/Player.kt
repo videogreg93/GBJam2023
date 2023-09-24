@@ -80,7 +80,7 @@ class Player : Entity(playerSmallTexture.get()) {
         }
         if (!Globals.godMode) {
             MegaManagers.getManager<ScoreManager>().downgrade()
-            val invincibilityDuration = addFlickerAction(0.05f, 6)
+            val invincibilityDuration = addFlickerAction(0.05f, 8)
             invincible = true
             addAction(Actions.delay(invincibilityDuration, Actions.run {
                 invincible = false

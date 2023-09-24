@@ -39,6 +39,7 @@ const val leftToRight = "shaders/leftToRight.png"
 const val leftToRight2 = "shaders/leftToRight2.png"
 const val out = "shaders/out.png"}
     object Sounds {
+const val bossShoot_ogg_sound = "sounds/bossShoot.ogg"
 const val bullet1_ogg_sound = "sounds/bullet1.ogg"
 const val bullet2_ogg_sound = "sounds/bullet2.ogg"
 const val bulletLevel3_ogg_sound = "sounds/bulletLevel3.ogg"
@@ -59,6 +60,7 @@ const val world1 = "world/world1.png"
 const val world2 = "world/world2.png"
 const val world3 = "world/world3.png"
 const val worldLocked = "world/worldLocked.png"}
+const val ZenithBossTheme_ogg_sound = "ZenithBossTheme.ogg"
 const val ZenithGameTheme_ogg_sound = "ZenithGameTheme.ogg"
 const val ZenithGameThemeIntro_ogg_sound = "ZenithGameThemeIntro.ogg"
 const val ZenithTitleTheme_ogg_sound = "ZenithTitleTheme.ogg"

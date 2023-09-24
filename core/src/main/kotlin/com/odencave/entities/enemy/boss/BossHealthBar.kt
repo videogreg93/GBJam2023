@@ -28,7 +28,7 @@ class BossHealthBar(private val boss: Boss) : BaseActor(barFrameAsset.get()) {
                     ) { currentValue ->
                         shownPercentage = currentValue
                         initialLoad = false
-                        MegaManagers.soundManager.playSFX(SFX.select.get(), -0.4f)
+                        MegaManagers.soundManager.playSFX(SFX.select.get(), -0.5f)
                     })
             } else {
                 addAction(

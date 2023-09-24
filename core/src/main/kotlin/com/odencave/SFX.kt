@@ -37,4 +37,7 @@ object SFX {
 
     @Asset
     val mapCursorSound = AssetDescriptor(Assets.Sounds.mapCursor_ogg_sound, Sound::class.java)
+
+    @Asset
+    val bossShoot = AssetDescriptor(Assets.Sounds.bossShoot_ogg_sound, Sound::class.java)
 }

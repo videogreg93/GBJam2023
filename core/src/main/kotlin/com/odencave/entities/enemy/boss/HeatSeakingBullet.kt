@@ -2,10 +2,12 @@ package com.odencave.entities.enemy.boss
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.odencave.SFX
 import com.odencave.entities.Entity
 import com.odencave.entities.enemy.EnemyBullet
 import com.odencave.entities.player.Player
 import gaia.base.Crew
+import gaia.managers.MegaManagers
 import gaia.managers.assets.AssetManager.Companion.get
 import ktx.math.minus
 
@@ -39,6 +41,7 @@ class HeatSeakingBullet(var targetWaitPosition: Vector2, val delayUntilSeek: Flo
                     addAction(Actions.delay(delayUntilSeek, Actions.run {
                         targetWaitPosition = (playerPos - myPos).nor()
                         behavior = Behavior.SeekingPlayer
+                        MegaManagers.soundManager.playSFXRandomPitch(SFX.bossShoot.get())
                     }))
                 }
             }
