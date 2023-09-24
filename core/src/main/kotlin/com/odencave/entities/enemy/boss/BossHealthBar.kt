@@ -62,5 +62,8 @@ class BossHealthBar(private val boss: Boss) : BaseActor(barFrameAsset.get()) {
         if (tempPercent != actualFillPercent) {
             actualFillPercent = tempPercent
         }
+        if (boss.currentHealth <= 0) {
+            removeFromCrew()
+        }
     }
 }
