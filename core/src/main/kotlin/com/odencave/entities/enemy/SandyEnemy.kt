@@ -17,6 +17,7 @@ class SandyEnemy(val moveAmount: Float = 50f, arriveFromBack: Boolean = false) :
 
 
     init {
+        scoreValue = 15
         val signMultiplier = if (arriveFromBack) -1 else 1
         val sequence = Actions.sequence().apply {
             addAction(Actions.moveBy(-moveAmount * signMultiplier, 0f, 2f, Interpolation.fastSlow))

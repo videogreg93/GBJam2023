@@ -1,6 +1,7 @@
 package com.odencave.screens
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.odencave.SFX
 import com.odencave.ScoreManager
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import com.odencave.models.Leaderboard
@@ -73,10 +74,13 @@ class LeaderboardScreen : BasicScreen("Game Over") {
         when (action) {
             ActionListener.InputAction.UP -> selectedLabel.moveUp()
             ActionListener.InputAction.DOWN -> selectedLabel.moveDown()
-            ActionListener.InputAction.START -> if (selectedLabelIndex < 2) {
-                selectedLabelIndex++
-            } else {
-                saveEntry()
+            ActionListener.InputAction.START -> {
+                MegaManagers.soundManager.playSFX(SFX.select.get())
+                if (selectedLabelIndex < 2) {
+                    selectedLabelIndex++
+                } else {
+                    saveEntry()
+                }
             }
 
             else -> return false
