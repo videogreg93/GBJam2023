@@ -11,7 +11,7 @@ import com.odencave.SFX
 import com.odencave.ScoreManager
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
-import com.odencave.entities.enemy.Boss
+import com.odencave.entities.enemy.boss.Boss
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.EnemyBullet
 import com.odencave.events.PlayerDeathEvent
@@ -22,7 +22,6 @@ import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 import gaia.utils.FloatLerpAction
-import gaia.utils.IntProperty
 import kotlin.math.abs
 
 class Player : Entity(playerSmallTexture.get()) {

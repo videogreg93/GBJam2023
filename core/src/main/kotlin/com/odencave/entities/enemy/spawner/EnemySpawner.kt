@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.odencave.entities.enemy.Boss
-import com.odencave.entities.enemy.BossHealthBar
+import com.odencave.entities.enemy.boss.Boss
+import com.odencave.entities.enemy.boss.BossHealthBar
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.spawner.EndLevelEvent
 import gaia.Globals

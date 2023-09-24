@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.odencave.SFX
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
-import com.odencave.entities.enemy.Boss
+import com.odencave.entities.enemy.boss.Boss
 import com.odencave.entities.enemy.Enemy
 import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset

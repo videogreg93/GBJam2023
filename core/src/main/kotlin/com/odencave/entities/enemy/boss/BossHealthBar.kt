@@ -1,4 +1,4 @@
-package com.odencave.entities.enemy
+package com.odencave.entities.enemy.boss
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion

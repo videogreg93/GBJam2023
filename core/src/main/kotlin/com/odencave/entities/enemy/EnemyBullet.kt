@@ -34,6 +34,6 @@ class EnemyBullet(val direction: Vector2) : Entity(bulletAsset.get()) {
         private const val DEFAULT_SPEED = 80f
 
         @Asset
-        private val bulletAsset = AssetDescriptor(Assets.Enemy.bullet, Texture::class.java)
+        val bulletAsset = AssetDescriptor(Assets.Enemy.bullet, Texture::class.java)
     }
 }
