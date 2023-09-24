@@ -27,7 +27,7 @@ import kotlin.math.sin
 class TitleScreen() : BasicScreen("Title") {
 
     val titleLabel = Label("Zenith", MegaManagers.fontManager.titleFont)
-    val pressStartLabel = Label("Press Start", MegaManagers.fontManager.titleFont, 200f, 200f)
+    val pressStartLabel = Label("Press Start", MegaManagers.fontManager.pressStartFont, 200f, 200f)
     val lineLeft = BaseActor(lineAsset.get())
     val lineRight = BaseActor(lineAsset.get())
 

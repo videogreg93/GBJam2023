@@ -28,7 +28,7 @@ class Boss : Enemy(idleTexture.get()) {
     private var canFlicker = true
     var isDead = false
 
-    val maxHealth = 10
+    val maxHealth = 100
     var currentHealth = maxHealth
         set(value) {
             field = value.coerceAtLeast(0)
@@ -146,7 +146,7 @@ class Boss : Enemy(idleTexture.get()) {
     fun loseHealth() {
         currentHealth--
         if (currentHealth <= 0 && !isDead) {
-            isDead
+            isDead = true
             attackAction.finish()
             actions.clear()
             val flickerDuration = addFlickerAction(0.005f, 6)

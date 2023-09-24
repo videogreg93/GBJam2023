@@ -120,6 +120,9 @@ class Player : Entity(playerSmallTexture.get()) {
         Gdx.app.log("PLAYER", "Upgraded ship!")
         val flickDelay = 0.05f
         MegaManagers.soundManager.playSFX(SFX.playerUpgrade.get())
+        if (upgrade is ShipUpgrade.Upgrade3) {
+            currentHealth++
+        }
         addAction(
             Actions.sequence(
                 Actions.repeat(6, Actions.sequence(

@@ -38,7 +38,7 @@ class ScoreManager: MegaManagers.Manager, EventListener<EnemyDestroyedEvent> {
         currentTotalScore += event.enemy.scoreValue
         upgradeScore += event.enemy.scoreValue
         Gdx.app.log("SCOREMANAGER", currentTotalScore.toString())
-        if (upgradeScore >= nextUpgrade.scoreThreshold) {
+        if (upgradeScore >= nextUpgrade.scoreThreshold && player.shipUpgrade != ShipUpgrade.Upgrade3) {
             // Upgrade ship
             player.upgradeShip(nextUpgrade)
             currentUpgradeIndex++
@@ -46,8 +46,12 @@ class ScoreManager: MegaManagers.Manager, EventListener<EnemyDestroyedEvent> {
         }
     }
 
+    fun resetScore() {
+        currentTotalScore = 0
+        upgradeScore = 0
+    }
+
     companion object {
         const val SCORE_FOR_SECRET_LEVEL = 6600
-//        const val SCORE_FOR_SECRET_LEVEL = 600
     }
 }

@@ -18,7 +18,8 @@ const val john = "enemy/john.png"
 const val sandy = "enemy/sandy.png"}
     object Fonts {
 const val font1 = "fonts/font1.otf"
-const val font1Bold = "fonts/font1Bold.otf"}
+const val font1Bold = "fonts/font1Bold.otf"
+const val goblin = "fonts/goblin.ttf"}
 const val head = "head.png"
     object I18n {}
 const val mapBackground = "mapBackground.png"
@@ -43,6 +44,7 @@ const val bullet2_ogg_sound = "sounds/bullet2.ogg"
 const val bulletLevel3_ogg_sound = "sounds/bulletLevel3.ogg"
 const val enemyHit_ogg_sound = "sounds/enemyHit.ogg"
 const val levelComplete_ogg_sound = "sounds/levelComplete.ogg"
+const val mapCursor_ogg_sound = "sounds/mapCursor.ogg"
 const val playerHit_ogg_sound = "sounds/playerHit.ogg"
 const val Select_ogg_sound = "sounds/Select.ogg"
 const val text_ogg_sound = "sounds/text.ogg"

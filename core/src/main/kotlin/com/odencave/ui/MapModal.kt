@@ -5,14 +5,16 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.odencave.SFX
 import com.odencave.assets.Assets
 import gaia.Globals
 import gaia.base.BaseActor
+import gaia.managers.MegaManagers
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 import gaia.ui.utils.*
 
-class MapModal(val selectedWorldIndex: Int = 0): BaseActor(background.get()) {
+class MapModal(val selectedWorldIndex: Int = 0) : BaseActor(background.get()) {
     private val world1 = BaseActor(world1Asset.get())
     private val world2 = BaseActor(if (Globals.world2Unlocked) world2Asset.get() else worldLocked.get())
     private val world3 = BaseActor(if (Globals.world3Unlocked) world3Asset.get() else worldLocked.get())
@@ -55,7 +57,12 @@ class MapModal(val selectedWorldIndex: Int = 0): BaseActor(background.get()) {
                 Actions.sequence(
                     Actions.moveTo(resetPosition.x, resetPosition.y),
                     Actions.delay(0.1f),
-                    Actions.moveBy(10f, 0f, 1f, Interpolation.fastSlow),
+                    Actions.parallel(
+                        Actions.moveBy(10f, 0f, 1f, Interpolation.fastSlow),
+                        Actions.delay(0.8f, Actions.run {
+                            MegaManagers.soundManager.playSFX(SFX.mapCursorSound.get())
+                        })
+                    )
                 )
             )
         )

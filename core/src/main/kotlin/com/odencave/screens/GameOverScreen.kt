@@ -1,6 +1,5 @@
 package com.odencave.screens
 
-import com.badlogic.gdx.math.Interpolation
 import com.odencave.i18n.gaia.base.BackgroundGrid
 import gaia.Globals
 import gaia.managers.MegaManagers
@@ -12,7 +11,7 @@ import gaia.ui.utils.calculatePositionFor
 import kotlin.math.cos
 import kotlin.math.sin
 
-class GameOverScreen: BasicScreen("Game Over") {
+class GameOverScreen : BasicScreen("Game Over") {
 
     private val gameOverLabel = Label("Game Over", MegaManagers.fontManager.defaultFont)
 
@@ -35,6 +34,7 @@ class GameOverScreen: BasicScreen("Game Over") {
         gameOverLabel.x = centerPoint.x + 20 + (sin(accDelta * 2) * 20) - 20f
         gameOverLabel.y = (centerPoint.y + 20 + (cos(accDelta * 2) * 20)) - 20f
         if (accDelta >= 10f) {
+            Globals.resetForNewGame()
             MegaManagers.screenManager.changeScreen(TitleScreen())
         }
     }

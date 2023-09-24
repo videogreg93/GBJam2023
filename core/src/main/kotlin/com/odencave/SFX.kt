@@ -34,4 +34,7 @@ object SFX {
 
     @Asset
     val textAdvance = AssetDescriptor(Assets.Sounds.text_ogg_sound, Sound::class.java)
+
+    @Asset
+    val mapCursorSound = AssetDescriptor(Assets.Sounds.mapCursor_ogg_sound, Sound::class.java)
 }

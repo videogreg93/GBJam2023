@@ -42,10 +42,20 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
     var isLeftPressed = false
     var shootDebouncerReady = true
 
-    override fun firstShown() {
-        super.firstShown()
+    override fun show() {
+        super.show()
         MegaManagers.eventManager.subscribeTo<EndLevelEvent>(this)
         MegaManagers.eventManager.subscribeTo<PlayerDeathEvent>(this)
+    }
+
+    override fun hide() {
+        super.hide()
+        MegaManagers.eventManager.unsubscribe<EndLevelEvent>(this)
+        MegaManagers.eventManager.unsubscribe<PlayerDeathEvent>(this)
+    }
+
+    override fun firstShown() {
+        super.firstShown()
         batch.shader = Shaders.paletteShader
         player.center()
         player.alignLeft(10f)
@@ -61,6 +71,7 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
         backgroundCrew.addMember(BackgroundGrid())
 
         // intro sequence
+        player.invincible = false
         if (!Globals.skipIntro && showMapScreen) {
             val safeCrew = crew
             val selectedIndex = when {
@@ -79,7 +90,7 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
                         Actions.run {
                             showShipCursor()
                         },
-                        Actions.delay(3f),
+                        Actions.delay(3.31f),
                         Actions.run {
                             hideShipCursor()
                             safeCrew.addMember(player)
@@ -146,6 +157,7 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
             }
 
             is EndLevelEvent -> {
+                player.invincible = true
                 MegaManagers.inputActionManager.disableAllInputs()
                 player.stop()
                 val dest = player.calculatePositionFor {
@@ -170,11 +182,21 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
                                     MegaManagers.screenManager.changeScreen(GameCompleteScreen())
                                 }
 
-                                Globals.world2Unlocked || Globals.world3Unlocked -> Globals.world4Unlocked = true
-                                MegaManagers.getManager<ScoreManager>().currentTotalScore >= ScoreManager.SCORE_FOR_SECRET_LEVEL -> Globals.world3Unlocked
-                                else -> Globals.world2Unlocked = true
+                                Globals.world2Unlocked || Globals.world3Unlocked -> {
+                                    Globals.world4Unlocked = true
+                                    MegaManagers.screenManager.changeScreen(MainScreen(player))
+                                }
+
+                                MegaManagers.getManager<ScoreManager>().currentTotalScore >= ScoreManager.SCORE_FOR_SECRET_LEVEL -> {
+                                    Globals.world3Unlocked
+                                    MegaManagers.screenManager.changeScreen(MainScreen(player))
+                                }
+
+                                else -> {
+                                    Globals.world2Unlocked = true
+                                    MegaManagers.screenManager.changeScreen(MainScreen(player))
+                                }
                             }
-                            MegaManagers.screenManager.changeScreen(MainScreen(player))
                             MegaManagers.inputActionManager.enableAllInputs()
                         }
                     )
@@ -220,7 +242,7 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
                     when (player.shipUpgrade) {
                         ShipUpgrade.Upgrade1 -> shootUpgrade1()
                         ShipUpgrade.Upgrade2 -> shootUpgrade2()
-                        ShipUpgrade.Upgrade3 -> shootNoUpgrade()
+                        ShipUpgrade.Upgrade3 -> shootUpgrade2()
                         null -> shootNoUpgrade()
                     }
                 }

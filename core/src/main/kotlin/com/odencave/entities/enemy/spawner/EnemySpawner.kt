@@ -8,6 +8,7 @@ import com.odencave.entities.enemy.boss.Boss
 import com.odencave.entities.enemy.boss.BossHealthBar
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.spawner.EndLevelEvent
+import com.odencave.entities.player.Player
 import gaia.Globals
 import gaia.base.BaseActor
 import gaia.managers.MegaManagers
@@ -19,6 +20,7 @@ class EnemySpawner : BaseActor() {
     private val distanceBetweenLanes: Int
         get() = Globals.WORLD_HEIGHT.toInt() / amountOfLanes
     private val enemySequenceAction = Actions.sequence()
+    private val player by lazy { crew?.getAllOf<Player>()?.firstOrNull() }
 
     private fun getSpawnPositionForLane(lane: Int): Vector2 {
         if (lane >= amountOfLanes || lane < 0) {
@@ -92,7 +94,10 @@ class EnemySpawner : BaseActor() {
     fun finishLevel() {
         addActionToSequence(
             Actions.run {
-                MegaManagers.eventManager.sendEvent(EndLevelEvent())
+                val health = player?.currentHealth ?: 0
+                if (health >= 0) {
+                    MegaManagers.eventManager.sendEvent(EndLevelEvent())
+                }
             }
         )
     }
