@@ -63,10 +63,6 @@ class Player : Entity(playerSmallTexture.get()) {
         xSpeed = -currentSpeed
     }
 
-    override fun onAddedToCrew(crew: Crew) {
-        super.onAddedToCrew(crew)
-    }
-
     override fun onCollision(other: Entity) {
         when (other) {
             is Enemy, is EnemyBullet -> {
