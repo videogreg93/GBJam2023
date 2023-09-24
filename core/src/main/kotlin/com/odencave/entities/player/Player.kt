@@ -73,6 +73,11 @@ class Player : Entity(playerSmallTexture.get()) {
         }
     }
 
+    override fun onAddedToCrew(crew: Crew) {
+        super.onAddedToCrew(crew)
+        stop()
+    }
+
     private fun handleHit(other: Entity) {
         MegaManagers.screenManager.getCurrentScreen()?.shakeCamera(0.2f, 2f)
         if (other !is Boss) {
