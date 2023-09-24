@@ -51,9 +51,9 @@ class MainScreen(val player: Player = Player(), val showMapScreen: Boolean = tru
         player.shouldDraw = false
         player.x -= 30f
         val spawner = when {
-            Globals.world4Unlocked -> SpawnerLevels.World2()
-            Globals.world3Unlocked -> SpawnerLevels.World2()
-            Globals.world2Unlocked -> SpawnerLevels.World4()
+            Globals.world4Unlocked -> SpawnerLevels.World4()
+            Globals.world3Unlocked -> SpawnerLevels.World4()
+            Globals.world2Unlocked -> SpawnerLevels.World2()
             else -> SpawnerLevels.World1()
         }
         crew.addMembers(spawner)

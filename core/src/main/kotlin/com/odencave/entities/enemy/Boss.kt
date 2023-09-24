@@ -9,15 +9,39 @@ import gaia.base.Crew
 import gaia.managers.assets.Asset
 import gaia.managers.assets.AssetManager.Companion.get
 
-class Boss: Enemy(idleTexture.get()) {
+class Boss : Enemy(idleTexture.get()) {
+
+    private var canFlicker = true
+
+    val maxHealth = 100
+    var currentHealth = maxHealth
+        set(value) {
+            field = value.coerceAtLeast(0)
+        }
+
+    init {
+        setPosition(1000f,1000f)
+        updateSprite()
+        shouldDraw = false
+    }
 
     override fun onAddedToCrew(crew: Crew) {
         super.onAddedToCrew(crew)
         val sequence = Actions.sequence().apply {
-            addAction(Actions.moveBy(-50f, 0f, 4f, Interpolation.fastSlow))
+            addAction(Actions.run { shouldDraw = true })
+            addAction(Actions.moveBy(-(width / 2f + 20), 0f, 4f, Interpolation.fastSlow))
             addAction(Actions.delay(0.5f))
         }
         addAction(sequence)
+    }
+
+    fun loseHealth() {
+        currentHealth--
+        if (canFlicker) {
+            canFlicker = false
+            val flickerDuration = addFlickerAction(0.05f, 6)
+            addAction(Actions.delay(flickerDuration, Actions.run { canFlicker = true }))
+        }
     }
 
     companion object {

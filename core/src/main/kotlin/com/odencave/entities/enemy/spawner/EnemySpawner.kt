@@ -5,11 +5,13 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.odencave.entities.enemy.Boss
+import com.odencave.entities.enemy.BossHealthBar
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.spawner.EndLevelEvent
 import gaia.Globals
 import gaia.base.BaseActor
 import gaia.managers.MegaManagers
+import gaia.ui.utils.alignBottom
 import gaia.ui.utils.skip
 
 class EnemySpawner : BaseActor() {
@@ -32,14 +34,25 @@ class EnemySpawner : BaseActor() {
     }
 
     fun addBoss() {
-        val action = Actions.run {
-            val boss = Boss().apply {
-                center()
-                x = Globals.WORLD_WIDTH/2f
-            }
-            crew?.addMember(boss)
+        val boss = Boss().apply {
+            center()
+            x = Globals.WORLD_WIDTH / 2f
         }
-        enemySequenceAction.addAction(action)
+        val barAction = Actions.run {
+            val bossHealthBar = BossHealthBar(boss).apply {
+                center()
+                alignBottom(10f)
+            }
+            crew?.addMembers(bossHealthBar)
+        }
+        val bossAction = Actions.delay(2f, Actions.run {
+            crew?.addMember(boss)
+        })
+        enemySequenceAction.addAction(
+            Actions.sequence(
+                barAction, bossAction
+            )
+        )
     }
 
     fun addEnemy(configs: List<SpawnConfiguration>, delayFromPrevious: Float = 0f) {

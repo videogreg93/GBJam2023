@@ -11,6 +11,7 @@ import com.odencave.SFX
 import com.odencave.ScoreManager
 import com.odencave.assets.Assets
 import com.odencave.entities.Entity
+import com.odencave.entities.enemy.Boss
 import com.odencave.entities.enemy.Enemy
 import com.odencave.entities.enemy.EnemyBullet
 import com.odencave.events.PlayerDeathEvent
@@ -79,7 +80,9 @@ class Player : Entity(playerSmallTexture.get()) {
 
     private fun handleHit(other: Entity) {
         MegaManagers.screenManager.getCurrentScreen()?.shakeCamera(0.2f, 2f)
-        other.removeFromCrew()
+        if (other !is Boss) {
+            other.removeFromCrew()
+        }
         if (!Globals.godMode) {
             MegaManagers.getManager<ScoreManager>().downgrade()
             val invincibilityDuration = addFlickerAction(0.05f, 6)
